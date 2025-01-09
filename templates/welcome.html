@@ -1,0 +1,34 @@
+{% extends "document.html" %}
+
+{% block body %}
+  <div class="container-fluid">
+    <div class="row justify-content-center pb-5 px-3 px-md-5">
+      <div class="col-md-8">
+        <section class="row">
+          <h1 class="text-center py-5"><strong>Welcome, this is <span class="brand">TechNote</span></strong></h1>
+          <h2>Please select the directories:</h2>
+          <p>
+            If you already have a directory that contains
+            Markdown (<code>.md</code>) files, that's the
+            directory you should choose. Otherwise, just
+            select an empty directory to store the new notes.
+          </p>
+          <p>For more information please view the <code>README.md</code> file.</p>
+        </section>
+        <section class="row mt-3 justify-content-center">
+          <div class="col-md-8">
+            <form action="/setup" method="post">
+              <div class="row gap-2 gap-md-3 justify-content-center">
+                <input autocomplete="off" class="form-control form-control-lg" type="text" name="directories" value="./examples/tech_notes">
+                <input autocomplete="off" class="form-control form-control-lg" type="text" name="directories" value="./examples/personal_notes">
+                <input autocomplete="off" class="form-control form-control-lg" type="text" name="directories" value=".">
+                <input autocomplete="off" autofocus class="form-control form-control-lg" type="text" name="directories" placeholder="A directory containing .md files">
+                <button class="btn btn-lg btn-primary mt-3 w-auto" type="submit">Add the notes</button>
+              </div>
+            </form>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+{% endblock %}

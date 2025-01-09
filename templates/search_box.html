@@ -1,0 +1,31 @@
+<div id="searchBox" class="position-relative" tabindex="-1">
+    <div id="searchPanel">
+        <hr>
+        <div class="panel-container"></div>
+    </div>
+    <form id="searchForm" action="{{ url_for('search') }}" method="get">
+        <input id="searchInput" autocomplete="off" required class="form-control" type="search" placeholder="Search everywhere (press Enter to search)" name="q">
+    </form>
+    <template id="searchResultTemplate">
+        <div class="source-item" data-item="source">
+            <h5 class="source-title px-2 ps-md-3 text-center text-md-start">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                </svg>
+                [[ source ]]
+            </h5>
+            <ul class="occurrences px-2 ps-md-4 pe-md-5">
+                <li class="occurrence-item" data-item="occurrence">
+                    <a href="[[ url ]]">[[ occurrence ]]</a>
+                </li>
+            </ul>
+            <hr>
+        </div>
+    </template>
+    <template id="searchLoadingTemplate">
+        <p class="message p-3 m-0 text-center">Please wait....</p>
+    </template>
+    <template id="searchNoResultTemplate">
+        <p class="message p-3 m-0 text-center">Your search did not match any documents.</p>
+    </template>
+</div>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+
+<html lang="en" class="dark" data-bs-theme="dark">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+        <link href="{{ url_for('static', filename='bootstrap-5.3.3-dist/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='bs-mod.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='note-content.css') }}" rel="stylesheet">
+        <script src="{{ url_for('static', filename='bootstrap-5.3.3-dist/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='main.js') }}"></script>
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+    </body>
+</html>

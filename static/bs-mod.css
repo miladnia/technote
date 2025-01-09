@@ -1,0 +1,63 @@
+/* offcanvas
+ * see https://getbootstrap.com/docs/5.3/components/offcanvas/
+ */
+
+.offcanvas {
+    background-color: var(--secondary-bg);
+    bottom: auto;
+    --bs-offcanvas-color: var(--gray-300);
+}
+
+.offcanvas-end.x-float-offcanvas {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    max-height: 75vh;
+    margin-top: 4.5rem;
+    margin-right: 1rem;
+    margin-left: 1rem;
+}
+
+.offcanvas-header {
+    background-color: var(--gray-950);
+    color: var(--secondary-color);
+}
+
+.offcanvas-header-slim {
+    background-color: transparent;
+    justify-content: end;
+}
+
+.offcanvas-body {
+    padding-top: 0.5rem;
+}
+
+.offcanvas-backdrop.show {
+	opacity: 0;
+}
+
+.offcanvas-header h5 {
+    margin: 0;
+}
+
+/* buttons
+ * see https://getbootstrap.com/docs/5.3/components/buttons/
+ */
+
+.btn {
+    border-radius: 0.5rem;
+}
+
+.btn-dark {
+    background-color: var(--primary-bg);
+    border-color: var(--primary-bg);
+}
+
+.btn-dark:hover {
+    background-color: var(--gray-750);
+}
+
+/* form control */
+
+input[type="search"]:focus {
+    box-shadow: none;
+}

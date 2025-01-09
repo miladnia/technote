@@ -1,0 +1,166 @@
+.note-content {
+    font-size: 1.5em;
+    color: #E0E0E0;
+}
+
+.note-content h1,
+.note-content h2,
+.note-content h3,
+.note-content h4,
+.note-content h5,
+.note-content h6 {
+    font-weight: bold;
+    padding-bottom: 0.75rem;
+    border-bottom: 0.1rem solid #424242;
+    margin-bottom: 1.25rem;
+    margin-top: 2.5rem;
+    color: #BDBDBD;
+}
+
+.note-content > h1:first-child,
+.note-content > h2:first-child,
+.note-content > h3:first-child,
+.note-content > h4:first-child,
+.note-content > h5:first-child,
+.note-content > h6:first-child {
+    margin-top: 0;
+}
+
+.note-content h1 {
+    color: #EEEEEE;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    margin-top: 3rem;
+}
+
+/* quote */
+
+.note-content blockquote {
+    border-left: 0.25rem solid #424242;
+    padding-left: 1.25rem;
+    color: #9E9E9E;
+}
+
+/* code */
+
+.note-content pre {
+    /* just temporary fix the overflow issue that impacts the main section */
+    /* white-space: pre-wrap; */
+}
+
+/* table */
+
+.note-content table {
+    font-size: 0.75em;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.note-content thead {
+    border-bottom: 0.1rem solid var(--gray-300);
+}
+
+.note-content th {
+    padding-bottom: 1rem;
+}
+
+.note-content tbody > tr:first-child td {
+    padding-top: 1rem;
+}
+
+.note-content .task-list {
+    list-style: none;
+    padding: 0;
+}
+
+.note-content .task-list input[type="checkbox"] {
+    margin: 1rem;
+}
+
+/*  figure */
+
+.note-content figure {
+    text-align: center;
+}
+
+.note-content img {
+    max-width: 75%;
+}
+
+.note-content figcaption {
+    color: var(--gray-500);
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+/* sourceCode */
+
+div.sourceCode {
+    padding: 1rem;
+    border-radius: 0.75rem;
+}
+
+/* pandoc syntax highlighting: zenburn */
+
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+}
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+{ color: #cccccc; background-color: #303030; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */

@@ -1,0 +1,20 @@
+<div class="note-content">
+  $body$
+</div>
+<aside>
+  <div class="offcanvas offcanvas-end x-float-offcanvas mt-md-3 me-4 shadow" tabindex="-1" id="tocPanel" aria-labelledby="tocPanel">
+    <div class="offcanvas-header">
+      <h5 id="offcanvasRightLabel">Table of contents</h5>
+      <button type="button" class="btn-close btn-close-white text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body toc-container">
+      <nav role="doc-toc">
+        $if(toc)$
+          $table-of-contents$
+        $else$
+          There are no headings.
+        $endif$
+      </nav>
+    </div>
+  </div>
+</aside>

@@ -1,0 +1,47 @@
+<template id="noteEditorTemplate">
+    <section class="note-editor" tabindex="1">
+        <form method="post">
+            <textarea required name="note_content"></textarea>
+            <nav class="vertical-sticky position-fixed end-0 me-3 me-md-5 gap-2">
+                <button class="btn btn-success" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
+                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425z"/>
+                    </svg>
+                </button>
+                <button class="btn btn-secondary text-reset" type="button" data-editor-action="cancel">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                    </svg>
+                </button>
+            </nav>
+        </form>
+    </section>
+</template>
+
+<div class="modal fade" id="noteCreatorModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="noteCreatorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="noteCreatorModalLabel">New note</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="noteCreatorModalForm" action="{{ url_for('new_note') }}" method="post">
+            <div class="mb-3">
+              <label for="saveas-filename" class="col-form-label">Note filename:</label>
+              <input autocomplete="off" required type="text" class="form-control" id="saveas-filename" name="note_filename" placeholder="(e.g. my_new_note.md)">
+            </div>
+            <div class="mb-3 d-none">
+              <label for="saveas-directory" class="col-form-label">Note directory:</label>
+              <input autocomplete="off" type="text" class="form-control" id="saveas-directory" name="note_directory">
+            </div>
+            <input required type="hidden" name="note_content">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" form="noteCreatorModalForm" class="btn btn-primary">Create a new note</button>
+        </div>
+      </div>
+    </div>
+</div>
