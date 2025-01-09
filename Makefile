@@ -12,8 +12,8 @@ db:
 	python3 init_db.py
 
 clean:
-	rm -rf .cache/
-	rm -f notes.db
+	rm -ri .cache/
+	rm -i notes.db
 
 run:
 	python3 app.py
