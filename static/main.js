@@ -4,8 +4,36 @@ document.addEventListener('DOMContentLoaded', init);
 
 function init() {
     initSidebar();
-    initSearchForm();
+    initSearchBox();
     initEditor();
+    initKeyboardShortcuts();
+}
+
+function initKeyboardShortcuts() {
+    document.addEventListener('keydown', event => {
+        // Shift + Ctrl + [
+        if (event.ctrlKey && event.shiftKey && 'BracketLeft' === event.code) {
+            toggleSidebar();
+        }
+        // Shift + Ctrl + ]
+        else if (event.ctrlKey && event.shiftKey && 'BracketRight' === event.code) {
+            toggleTocPanel();
+        }
+        // Shift + Ctrl + /
+        else if (event.ctrlKey && event.shiftKey && 'Slash' === event.code) {
+            focusSearchBox();
+        }
+        // Esc
+        else if ('Escape' === event.code) {
+            // blur any element that is focused now
+            document.activeElement?.blur();
+        }
+    });
+}
+
+function toggleTocPanel() {
+    const panel = bootstrap.Offcanvas.getOrCreateInstance('#tocPanel');
+    panel.toggle();
 }
 
 function initSidebar() {
@@ -17,10 +45,10 @@ function initSidebar() {
 
     const buttons = document.querySelectorAll('button[data-target="sidebar"]');
     buttons.forEach(btn => {
-        btn.addEventListener('click', toggle);
+        btn.addEventListener('click', toggleSidebar);
     });
 
-    sidebar.addEventListener('transitionend', (event) => {
+    sidebar.addEventListener('transitionend', event => {
         // TODO check `target`
         const headerBtn = document.getElementById('headerSidebarBtn');
         headerBtn.style.display = (0 === sidebar.offsetWidth) ? 'block' : 'none';
@@ -28,62 +56,84 @@ function initSidebar() {
 
     // Auto close the side bar if the main element has been clicked
     const mainElement = document.querySelector('main');
-    mainElement.addEventListener('dblclick', (event) => {
+    mainElement.addEventListener('dblclick', () => {
         if (sidebar.offsetWidth <= 0) {
             return;
         }
 
-        close();
+        closeSidebar();
     });
+}
 
-    function toggle() {
-        if (sidebar.offsetWidth > 0) {
-            close();
-        } else {
-            open();
-        }
-    }
-
-    function close() {
-        sidebar.style.width = '0px';
-        sidebar.classList.remove('full-width');
-    }
-
-    function open() {
-        sidebar.classList.add('full-width');
-        sidebar.style.removeProperty('width');
-        // Hide the sidebar button in the header
-        const headerBtn = document.getElementById('headerSidebarBtn');
-        headerBtn.style.display = 'none';
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.offsetWidth > 0) {
+        closeSidebar();
+    } else {
+        openSidebar();
     }
 }
 
-function initSearchForm() {
+function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.style.width = '0px';
+    sidebar.classList.remove('full-width');
+}
+
+function openSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.add('full-width');
+    sidebar.style.removeProperty('width');
+    // Hide the sidebar button in the header
+    const headerBtn = document.getElementById('headerSidebarBtn');
+    headerBtn.style.display = 'none';
+}
+
+function initSearchBox() {
     const searchBox = document.getElementById('searchBox');
 
     if (!searchBox) {
         return;
     }
 
-    // On submit
-    const searchForm = document.getElementById('searchForm');
-    searchForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        await submitSearchQuery(searchForm);
-    });
+    // On `#searchInput` focus
+    document.getElementById('searchInput').addEventListener(
+        'focus', onSearchInputFocus
+    );
+    // On `#searchForm` submit
+    document.getElementById('searchForm').addEventListener(
+        'submit', onSearchFormSubmit
+    );
+    // On `#searchBox` focus out
+    searchBox.addEventListener(
+        'focusout', onSearchBoxFocusOut
+    );
+}
 
-    // On focus out
-    searchBox.addEventListener('focusout', (event) => {
-        if (event.relatedTarget === searchBox ||
-            event.relatedTarget === searchInput) {
-                return;
-        }
+function onSearchInputFocus(event) {
+    const searchInput = event.currentTarget;
+    searchInput.select();
+    openSearchPanel();
+}
 
-        // Fixed: links does not working
-        window.setTimeout(() => {
-            closeSearchPanel();
-        }, 500);
-    });
+async function onSearchFormSubmit(event) {
+    event.preventDefault();
+    const searchForm = event.currentTarget;
+    await submitSearchQuery(searchForm);
+}
+
+function onSearchBoxFocusOut(event) {
+    const searchBox = event.currentTarget;
+    // Is it an Element inside searchBox?
+    if (event.relatedTarget &&
+        event.relatedTarget.closest(`#${searchBox.id}`)) {
+            return;
+    }
+    closeSearchPanel();
+}
+
+function focusSearchBox() {
+    document.getElementById('searchInput').focus();
 }
 
 async function submitSearchQuery(form) {
@@ -101,35 +151,39 @@ async function submitSearchQuery(form) {
         return;
     }
 
-    renderSearchResult(result);
+    const query = form.q.value;
+    renderSearchResult(query, result);
 }
 
-function renderSearchResult(result) {
+function renderSearchResult(query, result) {
     const template = document.getElementById('searchResultTemplate');
     const fragment = document.createDocumentFragment();
-
     // The ref node for the source items
     const srcItemRef = template.content.firstElementChild.cloneNode(true);
 
-    result.forEach(source => {
+    result.forEach(entry => {
         // Create a source item
         const srcItem = srcItemRef.cloneNode(true);
         fragment.appendChild(srcItem);
         // Replace the placeholders
         srcItem.innerHTML = srcItem.innerHTML
-            .replaceAll('[[ source ]]', source['source']);
+            .replaceAll('[[ source ]]', entry['source']);
 
         // The ref node for the occurrence items
         const occItemRef = srcItem.querySelector('[data-item="occurrence"]');
         // Add the occurrences
-        source['occurrences'].forEach(occurrence => {
+        entry['occurrences'].forEach(occurrence => {
             // Create a occurrence item
             const occItem = occItemRef.cloneNode(true);
             occItemRef.parentNode.appendChild(occItem);
             // Replace the placeholders
+            const markedText = occurrence.replaceAll(
+                query, `<mark>${query}</mark>`
+            );
+            const fragUrl = entry['source_url'] + '#:~:text=';
             occItem.innerHTML = occItem.innerHTML
-                .replaceAll('[[ occurrence ]]', occurrence['text'])
-                .replaceAll('[[ link ]]', occurrence['link']);
+                .replaceAll('[[ occurrence ]]', markedText)
+                .replaceAll('[[ url ]]', fragUrl);
         });
         // Remove the ref node
         occItemRef.remove();
@@ -137,38 +191,44 @@ function renderSearchResult(result) {
 
     // Remove the ref node
     srcItemRef.remove();
-    showSearchPanel(fragment);
+    openSearchPanel(fragment);
 }
 
 function renderSearchLoading() {
     const template = document.getElementById('searchLoadingTemplate');
     const templateNode = template.content.firstElementChild.cloneNode(true);
-    showSearchPanel(templateNode);
+    openSearchPanel(templateNode);
 }
 
 function renderSearchNoResult() {
     const template = document.getElementById('searchNoResultTemplate');
     const templateNode = template.content.firstElementChild.cloneNode(true);
-    showSearchPanel(templateNode);
+    openSearchPanel(templateNode);
 }
 
-function showSearchPanel(fragment) {
+function openSearchPanel(fragment) {
     const panel = document.getElementById('searchPanel');
     const container = panel.querySelector('.panel-container');
-    container.textContent = '';
-    container.appendChild(fragment);
+    
+    if (!fragment && '' == container.textContent) {
+        return;
+    }
+
+    if (fragment) {
+        container.textContent = '';
+        container.appendChild(fragment);
+    }
+
     panel.style.display = 'block';
 }
 
 function closeSearchPanel() {
     const panel = document.getElementById('searchPanel');
     panel.style.display = 'none';
-    const container = panel.querySelector('.panel-container');
-    container.textContent = '';
 }
 
 function initEditor() {
-    ['noteCreatorBtn', 'noteEditorBtn'].forEach((btnId) => {
+    ['noteCreatorBtn', 'noteEditorBtn'].forEach(btnId => {
         const btn = document.getElementById(btnId);
         btn?.addEventListener('click', showEditor);
     });
