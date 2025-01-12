@@ -1,4 +1,24 @@
-/flask_session/
-/__pycache__/
-/.cache/
+# TechNote
+.cache/
 *.db
+
+# Flask
+flask_session/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python venv
+.venv/
+.env/
+venv/
+env/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+*.iml
