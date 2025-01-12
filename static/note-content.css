@@ -1,6 +1,23 @@
+:root {
+    --link-color-rgb: 110,168,254;
+}
+
 .note-content {
     font-size: 1.5em;
     color: #E0E0E0;
+}
+
+.note-content a {
+    color: rgba(var(--link-color-rgb));
+}
+
+.note-content a:hover {
+    text-decoration: underline;
+}
+
+.note-content ol,
+.note-content ul {
+    padding-left: 2rem;
 }
 
 .note-content h1,

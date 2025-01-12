@@ -122,21 +122,24 @@ def search(query: str):
     if not query:
         return []
     pattern = re.compile(rf"{re.escape(query)}")
-    result = []
+    results = []
     for note in get_all():
         with note.path.open("r", encoding="utf-8") as f:
             for line in f:
                 if not pattern.search(line):
                     continue
-                if not result or note.path.name != result[-1]["source"]:
-                    result.append({
+                # In some cases like reference links it could be empty
+                plain_text = _md_to_text(line)
+                if not plain_text:
+                    continue
+                if not results or note.path.name != results[-1]["source"]:
+                    results.append({
                         "source": note.path.name,
                         "source_url": url_for("note", note_id=note.id),
                         "occurrences": []
                     })
-                plain_text = _md_to_text(line)
-                result[-1]["occurrences"].append(plain_text)
-    return result
+                results[-1]["occurrences"].append(plain_text)
+    return results
 
 
 def _render_note_content(note: Note) -> str:
@@ -171,7 +174,11 @@ def _md_to_html(source_file) -> str:
 
 def _md_to_text(markdown: str) -> str:
     """Convert Markdown text to plain text"""
-    text = pandoc.convert_text(markdown, format="markdown", to="plain")
-    # Convert reference-style links `[title][ref]` to plain text `title`
+    text = pandoc.convert_text(markdown, format="markdown", to="plain", extra_args={
+        "--wrap=none"
+    })
+    # Convert reference links `[title][ref]` to plain text `title`
     text = re.sub(r'\[([^\]]+)\]\[[^\]]*\]', r'\1', text)
-    return text.strip()
+    # Remove spaces, list symbols, table borders
+    text = text.strip(' \n-*+|')
+    return text

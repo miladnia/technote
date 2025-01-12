@@ -61,3 +61,10 @@
 input[type="search"]:focus {
     box-shadow: none;
 }
+
+/* additional rules */
+
+.max-vh-75 {
+    max-height: 75vh;
+    overflow: auto;
+}

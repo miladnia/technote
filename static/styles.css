@@ -52,6 +52,17 @@ aside {
     background-color: var(--secondary-bg);
 }
 
+a,
+a:hover,
+a:visited {
+    color: inherit;
+    text-decoration: none;
+}
+
+ol, ul {
+    padding: 0;
+}
+
 nav ul {
     list-style: none;
 }
@@ -66,7 +77,6 @@ aside nav a {
 aside nav a,
 aside nav a:hover,
 aside nav a:visited {
-    text-decoration: none;
     color: #ececec !important;
 }
 
@@ -193,39 +203,14 @@ nav ul .list-title {
     display: none;
 }
 
-#searchPanel .panel-container {
-    max-height: 75vh;
-    overflow: auto;
-}
-
-#searchPanel .source-title {
-    font-weight: bold;
+#searchPanel h5 {
     color: var(--gray-600);
-    margin: 1rem 0;
 }
 
-#searchPanel .occurrence-item {
-    font-size: 0.85em;
-    margin-bottom: 0.3rem;
-}
-
-#searchPanel .occurrence-item a {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    padding-right: 3rem;
-    border-radius: 0.75rem;
-    text-decoration: none;
-}
-
-#searchPanel .occurrence-item a {
+#searchPanel li {
     background-color: var(--gray-800);
     color: var(--gray-300) !important;
-}
-
-#searchPanel hr {
-    background-color: var(--gray-500);
-    width: 95%;
-    margin: 0 auto;
+    font-size: 0.85em;
 }
 
 /* search occurrences */

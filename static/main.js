@@ -138,60 +138,79 @@ function focusSearchBox() {
 
 async function submitSearchQuery(form) {
     renderSearchLoading();
-    let result = [];
+    let results = [];
 
     try {
-        result = await submitForm(form);
+        results = await submitForm(form);
     } catch (error) {
         console.error(error.message);
     }
 
-    if (!result.length) {
+    if (!results.length) {
         renderSearchNoResult();
         return;
     }
 
     const query = form.q.value;
-    renderSearchResult(query, result);
+    renderSearchResults(results, query);
 }
 
-function renderSearchResult(query, result) {
-    const template = document.getElementById('searchResultTemplate');
+function renderSearchResults(results, query) {
+    const template = document.getElementById('searchResultsTemplate');
+    const sectionTemplate = template.content.firstElementChild.cloneNode(true);
     const fragment = document.createDocumentFragment();
-    // The ref node for the source items
-    const srcItemRef = template.content.firstElementChild.cloneNode(true);
 
-    result.forEach(entry => {
-        // Create a source item
-        const srcItem = srcItemRef.cloneNode(true);
-        fragment.appendChild(srcItem);
-        // Replace the placeholders
-        srcItem.innerHTML = srcItem.innerHTML
+    results.forEach(entry => {
+        const section = sectionTemplate.cloneNode(true);
+        fragment.appendChild(section);
+        // Replace placeholders
+        section.innerHTML = section.innerHTML
             .replaceAll('[[ source ]]', entry['source']);
 
-        // The ref node for the occurrence items
-        const occItemRef = srcItem.querySelector('[data-item="occurrence"]');
-        // Add the occurrences
+        // Create items for the section
+        const itemTemplate = section.querySelector('[data-iterate-for="occurrence"]');
         entry['occurrences'].forEach(occurrence => {
-            // Create a occurrence item
-            const occItem = occItemRef.cloneNode(true);
-            occItemRef.parentNode.appendChild(occItem);
-            // Replace the placeholders
+            const item = itemTemplate.cloneNode(true);
+            itemTemplate.parentNode.appendChild(item);
+            // Replace placeholders
             const markedText = occurrence.replaceAll(
                 query, `<mark>${query}</mark>`
             );
-            const fragUrl = entry['source_url'] + '#:~:text=';
-            occItem.innerHTML = occItem.innerHTML
+            item.innerHTML = item.innerHTML
                 .replaceAll('[[ occurrence ]]', markedText)
-                .replaceAll('[[ url ]]', fragUrl);
+                .replaceAll('[[ url ]]', entry['source_url']);
+            item.querySelector('a').addEventListener(
+                'mousedown', onSearchResultMousedown, {once: true}
+            );
         });
         // Remove the ref node
-        occItemRef.remove();
+        itemTemplate.remove();
     });
 
     // Remove the ref node
-    srcItemRef.remove();
+    sectionTemplate.remove();
     openSearchPanel(fragment);
+}
+
+function onSearchResultMousedown(event) {
+    // Add text fragment to the URL
+    const link = event.currentTarget;
+    const markedText = link.querySelector('mark').textContent;
+    const itemUrl = link.href;
+    link.href += generateTextFragment(link.textContent, markedText);
+
+    // We are already in the same page
+    if (itemUrl === location.href) {
+        link.addEventListener('click', onTextFragmentClick);
+    }
+}
+
+function onTextFragmentClick(event) {
+    const url = event.currentTarget.href;
+    location.href = '#';
+    setTimeout(() => {
+        location.href = url;
+    }, 100);
 }
 
 function renderSearchLoading() {
@@ -207,8 +226,7 @@ function renderSearchNoResult() {
 }
 
 function openSearchPanel(fragment) {
-    const panel = document.getElementById('searchPanel');
-    const container = panel.querySelector('.panel-container');
+    const container = document.getElementById('searchPanelContainer');
     
     if (!fragment && '' == container.textContent) {
         return;
@@ -219,6 +237,7 @@ function openSearchPanel(fragment) {
         container.appendChild(fragment);
     }
 
+    const panel = document.getElementById('searchPanel');
     panel.style.display = 'block';
 }
 
@@ -346,4 +365,19 @@ function disableFormElements(form, disabled = true) {
         }
         element.disabled = disabled
     });
+}
+
+function generateTextFragment(text, selection) {
+    const selectionIndex = text.indexOf(selection);
+
+    if (-1 === selectionIndex) {
+        return '';
+    }
+
+    let prefix = text.substring(0, selectionIndex).trim();
+    prefix = prefix ? `${encodeURIComponent(prefix)}-,` : '';
+    let suffix = text.substring(selectionIndex + selection.length).trim();
+    suffix = suffix ? `,-${encodeURIComponent(suffix)}` : '';
+
+    return `#:~:text=${prefix}${selection}${suffix}`;
 }
