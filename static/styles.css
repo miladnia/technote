@@ -146,6 +146,11 @@ nav ul .list-title {
 
 /* toc */
 
+.toc-container ol,
+.toc-container ul {
+	padding-left: 2rem;
+}
+
 .toc-container nav > ul {
     padding: 0;
 }
