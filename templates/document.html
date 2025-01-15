@@ -10,10 +10,14 @@
         <link href="{{ url_for('static', filename='bs-mod.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
         <link href="{{ url_for('static', filename='note-content.css') }}" rel="stylesheet">
-        <script src="{{ url_for('static', filename='bootstrap-5.3.3-dist/bootstrap.bundle.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='main.js') }}"></script>
     </head>
     <body>
         {% block body %}{% endblock %}
+        <script src="{{ url_for('static', filename='bootstrap-5.3.3-dist/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='utils.js') }}"></script>
+        <script src="{{ url_for('static', filename='sidebar.js') }}"></script>
+        <script src="{{ url_for('static', filename='searchbox.js') }}"></script>
+        <script src="{{ url_for('static', filename='editor.js') }}"></script>
+        <script src="{{ url_for('static', filename='main.js') }}"></script>
     </body>
 </html>
