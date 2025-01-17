@@ -1,6 +1,6 @@
-"use strict";
+import * as utils from './utils.js';
 
-function initSearchBox() {
+function init() {
     const searchBox = document.getElementById('searchBox');
 
     if (!searchBox) {
@@ -9,64 +9,64 @@ function initSearchBox() {
 
     // On `#searchInput` focus
     document.getElementById('searchInput').addEventListener(
-        'focus', onSearchInputFocus
+        'focus', onInputFocus
     );
     // On `#searchForm` submit
     document.getElementById('searchForm').addEventListener(
-        'submit', onSearchFormSubmit
+        'submit', onFormSubmit
     );
     // On `#searchBox` focus out
     searchBox.addEventListener(
-        'focusout', onSearchBoxFocusOut
+        'focusout', onFocusOut
     );
 }
 
-function onSearchInputFocus(event) {
-    const searchInput = event.currentTarget;
-    searchInput.select();
-    openSearchPanel();
+function focus() {
+    document.getElementById('searchInput').focus();
 }
 
-async function onSearchFormSubmit(event) {
+function onInputFocus(event) {
+    const searchInput = event.currentTarget;
+    searchInput.select();
+    openPanel();
+}
+
+async function onFormSubmit(event) {
     event.preventDefault();
     const searchForm = event.currentTarget;
     await submitSearchQuery(searchForm);
 }
 
-function onSearchBoxFocusOut(event) {
+function onFocusOut(event) {
     const searchBox = event.currentTarget;
     // Is it an Element inside searchBox?
     if (event.relatedTarget &&
         event.relatedTarget.closest(`#${searchBox.id}`)) {
             return;
     }
-    closeSearchPanel();
-}
-
-function focusSearchBox() {
-    document.getElementById('searchInput').focus();
+    closePanel();
 }
 
 async function submitSearchQuery(form) {
-    renderSearchLoading();
+    renderLoading();
     let results = [];
 
     try {
-        results = await submitForm(form);
+        results = await utils.submitForm(form);
     } catch (error) {
         console.error(error.message);
     }
 
     if (!results.length) {
-        renderSearchNoResult();
+        renderNoResult();
         return;
     }
 
     const query = form.q.value;
-    renderSearchResults(results, query);
+    renderResults(results, query);
 }
 
-function renderSearchResults(results, query) {
+function renderResults(results, query) {
     const template = document.getElementById('searchResultsTemplate');
     const sectionTemplate = template.content.firstElementChild.cloneNode(true);
     const fragment = document.createDocumentFragment();
@@ -91,7 +91,7 @@ function renderSearchResults(results, query) {
                 .replaceAll('[[ occurrence ]]', markedText)
                 .replaceAll('[[ url ]]', entry['source_url']);
             item.querySelector('a').addEventListener(
-                'mousedown', onSearchResultMousedown, {once: true}
+                'mousedown', onResultMousedown, {once: true}
             );
         });
         // Remove the ref node
@@ -100,35 +100,35 @@ function renderSearchResults(results, query) {
 
     // Remove the ref node
     sectionTemplate.remove();
-    openSearchPanel(fragment);
+    openPanel(fragment);
 }
 
-function onSearchResultMousedown(event) {
+function onResultMousedown(event) {
     // Add text fragment to the URL
     const link = event.currentTarget;
     const markedText = link.querySelector('mark').textContent;
     const itemUrl = link.href;
-    link.href += generateTextFragment(link.textContent, markedText);
+    link.href += utils.generateTextFragment(link.textContent, markedText);
 
     // We are already in the same page
     if (itemUrl === location.href) {
-        link.addEventListener('click', onTextFragmentClick);
+        link.addEventListener('click', utils.onTextFragmentClick);
     }
 }
 
-function renderSearchLoading() {
+function renderLoading() {
     const template = document.getElementById('searchLoadingTemplate');
     const templateNode = template.content.firstElementChild.cloneNode(true);
-    openSearchPanel(templateNode);
+    openPanel(templateNode);
 }
 
-function renderSearchNoResult() {
+function renderNoResult() {
     const template = document.getElementById('searchNoResultTemplate');
     const templateNode = template.content.firstElementChild.cloneNode(true);
-    openSearchPanel(templateNode);
+    openPanel(templateNode);
 }
 
-function openSearchPanel(fragment) {
+function openPanel(fragment) {
     const container = document.getElementById('searchPanelContainer');
     
     if (!fragment && '' == container.textContent) {
@@ -144,7 +144,9 @@ function openSearchPanel(fragment) {
     panel.style.display = 'block';
 }
 
-function closeSearchPanel() {
+function closePanel() {
     const panel = document.getElementById('searchPanel');
     panel.style.display = 'none';
 }
+
+export { init, focus };

@@ -1,5 +1,3 @@
-"use strict";
-
 async function submitForm(form) {
     const formData = new FormData(form);
     const queryString = new URLSearchParams(formData).toString();
@@ -60,3 +58,5 @@ function onTextFragmentClick(event) {
         location.href = url;
     }, 100);
 }
+
+export { submitForm, fetchText, disableFormElements, generateTextFragment, onTextFragmentClick };

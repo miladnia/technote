@@ -1,6 +1,6 @@
-"use strict";
+import * as utils from './utils.js';
 
-function initEditor() {
+function init() {
     ['noteCreatorBtn', 'noteEditorBtn'].forEach(btnId => {
         const btn = document.getElementById(btnId);
         btn?.addEventListener('click', showEditor);
@@ -45,12 +45,12 @@ function getOrCreateEditor(editorSpec) {
 
     // Check if there is any source note to edit
     if (editorSpec.sourceNote) {
-        disableFormElements(form);
-        fetchText(editorSpec.sourceNote)
+        utils.disableFormElements(form);
+        utils.fetchText(editorSpec.sourceNote)
             .then(sourceContent => {
                 form.note_content.value = sourceContent;
                 form.action = editorSpec.sourceNote;
-                disableFormElements(form, false);
+                utils.disableFormElements(form, false);
             })
             .catch(error => {
                 console.error(
@@ -82,3 +82,5 @@ function closeEditor(editor) {
     editor.style.display = 'none';
     document.body.style.removeProperty('overflow');
 }
+
+export { init };

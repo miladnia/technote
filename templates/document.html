@@ -14,10 +14,6 @@
     <body>
         {% block body %}{% endblock %}
         <script src="{{ url_for('static', filename='bootstrap-5.3.3-dist/bootstrap.bundle.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='utils.js') }}"></script>
-        <script src="{{ url_for('static', filename='sidebar.js') }}"></script>
-        <script src="{{ url_for('static', filename='searchbox.js') }}"></script>
-        <script src="{{ url_for('static', filename='editor.js') }}"></script>
-        <script src="{{ url_for('static', filename='main.js') }}"></script>
+        <script type="module" src="{{ url_for('static', filename='main.js') }}"></script>
     </body>
 </html>

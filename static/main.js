@@ -1,11 +1,11 @@
-"use strict";
-
-document.addEventListener('DOMContentLoaded', init);
+import * as sidebar from './modules/sidebar.js';
+import * as searchBox from './modules/searchbox.js';
+import * as editor from './modules/editor.js';
 
 function init() {
-    initSidebar();
-    initSearchBox();
-    initEditor();
+    sidebar.init();
+    searchBox.init();
+    editor.init();
     initKeyboardShortcuts();
 }
 
@@ -13,7 +13,7 @@ function initKeyboardShortcuts() {
     document.addEventListener('keydown', event => {
         // Shift + Ctrl + [
         if (event.ctrlKey && event.shiftKey && 'BracketLeft' === event.code) {
-            toggleSidebar();
+            sidebar.toggle();
         }
         // Shift + Ctrl + ]
         else if (event.ctrlKey && event.shiftKey && 'BracketRight' === event.code) {
@@ -21,7 +21,7 @@ function initKeyboardShortcuts() {
         }
         // Shift + Ctrl + /
         else if (event.ctrlKey && event.shiftKey && 'Slash' === event.code) {
-            focusSearchBox();
+            searchBox.focus();
         }
         // Esc
         else if ('Escape' === event.code) {
@@ -35,3 +35,5 @@ function toggleTocPanel() {
     const panel = bootstrap.Offcanvas.getOrCreateInstance('#tocPanel');
     panel.toggle();
 }
+
+document.addEventListener('DOMContentLoaded', init);
