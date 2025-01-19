@@ -1,19 +1,23 @@
 # Makefile
 
-.PHONY: all fresh db clean run dev
+.PHONY: install fresh db clean run dev
 
-all:
+install:
 	pip3 install -r requirements.txt
 	$(MAKE) db
 
 fresh: clean db
 
 db:
-	python3 init_db.py
+	python3 scripts/init_db.py
 
 clean:
-	rm -ri .cache/
-	rm -i notes.db
+	@ read -p "Are you sure? (y/n) " ans; \
+	if [ "$$ans" != "y" ]; then \
+		echo "Operation aborted."; \
+		exit 1;\
+	fi; \
+	rm -rf instance/
 
 run:
 	python3 app.py

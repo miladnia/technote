@@ -1,9 +1,9 @@
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).parent
+BASE_DIR = Path(__file__).resolve().parent
 
 CACHE_ENABLED = True
-CACHE_DIR = PROJECT_ROOT / ".cache"
-DATABASE = PROJECT_ROOT / "notes.db"
-DATABASE_SCHEMA = PROJECT_ROOT / "schema.sql"
-PANDOC_TEMPLATE = PROJECT_ROOT / "templates/pandoc.html"
+CACHE_DIR = BASE_DIR / "instance/cache"
+DATABASE_FILE = BASE_DIR / "instance/notes.db"
+DATABASE_SCHEMA = BASE_DIR / "resources/schema.sql"
+PANDOC_TEMPLATE = BASE_DIR / "templates/pandoc.html"

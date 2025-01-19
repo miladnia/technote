@@ -8,7 +8,7 @@ import pypandoc as pandoc
 
 from config import CACHE_ENABLED, CACHE_DIR, PANDOC_TEMPLATE
 from helpers import dbhash, get_db, prettify, query_db
-from note import Note
+from models import Note
 
 
 def add_directory(directory_path: str):

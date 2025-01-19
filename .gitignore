@@ -1,9 +1,6 @@
-# TechNote
-.cache/
-*.db
-
 # Flask
 flask_session/
+instance/
 
 # Python
 __pycache__/

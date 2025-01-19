@@ -2,13 +2,13 @@ from hashlib import md5
 import sqlite3
 
 from flask import g, render_template
-from config import DATABASE
+from config import DATABASE_FILE
 
 
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
+        db = g._database = sqlite3.connect(DATABASE_FILE)
     db.row_factory = sqlite3.Row
     return db
 
