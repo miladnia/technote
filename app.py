@@ -1,6 +1,7 @@
 from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
 from flask_session import Session
 
+from config import EXAMPLE_NOTES_DIR
 from helpers import release_resources, render_notfound, render_badrequest
 import technote
 
@@ -23,7 +24,7 @@ def index():
         grouped_notes = technote.get_grouped_notes_or_fail()
     except ValueError:
         # The user has not determined any directory of notes yet
-        return render_template("welcome.html")
+        return redirect("/welcome")
     return render_template("home.html", grouped_notes=grouped_notes)
 
 
@@ -82,13 +83,16 @@ def search():
     return jsonify(result)
 
 
-@app.route("/setup", methods=["POST"])
-def setup():
+@app.route("/welcome", methods=["GET", "POST"])
+def welcome():
+    if "GET" == request.method:
+        return render_template("welcome.html", example_notes_dir=EXAMPLE_NOTES_DIR)
+    # Add the directories
     for dir in request.form.getlist("directories"):
         try:
             technote.add_directory(dir)
         except ValueError:
-            flash(f"'{dir}' is not a valid directory.")
+            flash(f"'{dir}' is not a valid directory.", category="error")
     return redirect("/")
 
 

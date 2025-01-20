@@ -15,5 +15,6 @@
         {% block body %}{% endblock %}
         <script src="{{ url_for('static', filename='bootstrap-5.3.3-dist/bootstrap.bundle.min.js') }}"></script>
         <script type="module" src="{{ url_for('static', filename='main.js') }}"></script>
+        {% block script %}{% endblock %}
     </body>
 </html>
