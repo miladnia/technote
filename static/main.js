@@ -19,9 +19,13 @@ function initKeyboardShortcuts() {
         else if (event.ctrlKey && event.shiftKey && 'BracketRight' === event.code) {
             toggleTocPanel();
         }
+        // Ctrl + /
+        else if (event.ctrlKey && !event.shiftKey && 'Slash' === event.code) {
+            searchBox.focus();
+        }
         // Shift + Ctrl + /
         else if (event.ctrlKey && event.shiftKey && 'Slash' === event.code) {
-            searchBox.focus();
+            toggleShortcutsModal();
         }
         // Esc
         else if ('Escape' === event.code) {
@@ -34,6 +38,11 @@ function initKeyboardShortcuts() {
 function toggleTocPanel() {
     const panel = bootstrap.Offcanvas.getOrCreateInstance('#tocPanel');
     panel.toggle();
+}
+
+function toggleShortcutsModal() {
+    const modal = bootstrap.Modal.getOrCreateInstance('#shortcutsModal');
+    modal.toggle();
 }
 
 document.addEventListener('DOMContentLoaded', init);

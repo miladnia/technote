@@ -68,3 +68,7 @@ input[type="search"]:focus {
     max-height: 75vh;
     overflow: auto;
 }
+
+.no-default-icon::after {
+    display: none !important;
+}
