@@ -47,6 +47,10 @@
     border-radius: 0.5rem;
 }
 
+a.btn {
+    color: var(--bs-btn-color) !important;
+}
+
 .btn-dark {
     background-color: var(--primary-bg);
     border-color: var(--primary-bg);
