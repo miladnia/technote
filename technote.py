@@ -124,6 +124,8 @@ def search(query: str):
     pattern = re.compile(rf"{re.escape(query)}")
     results = []
     for note in get_all():
+        if not note.path.is_file():
+            continue
         with note.path.open("r", encoding="utf-8") as f:
             for line in f:
                 if not pattern.search(line):
