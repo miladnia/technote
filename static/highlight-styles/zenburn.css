@@ -1,0 +1,30 @@
+/* pandoc syntax highlighting: zenburn */
+
+:root {
+    --source-code-color: #cccccc;
+    --source-code-bg: #303030;
+    --highlight-al: #ffcfaf; /* Alert */
+    --highlight-an: #7f9f7f; /* Annotation */
+    --highlight-bn: #dca3a3; /* BaseN */
+    --highlight-cf: #f0dfaf; /* ControlFlow */
+    --highlight-ch: #dca3a3; /* Char */
+    --highlight-cn: #dca3a3; /* Constant */
+    --highlight-co: #7f9f7f; /* Comment */
+    --highlight-cv: #7f9f7f; /* CommentVar */
+    --highlight-do: #7f9f7f; /* Documentation */
+    --highlight-dt: #dfdfbf; /* DataType */
+    --highlight-dv: #dcdccc; /* DecVal */
+    --highlight-er: #c3bf9f; /* Error */
+    --highlight-fl: #c0bed1; /* Float */
+    --highlight-fu: #efef8f; /* Function */
+    --highlight-in: #7f9f7f; /* Information */
+    --highlight-kw: #f0dfaf; /* Keyword */
+    --highlight-op: #f0efd0; /* Operator */
+    --highlight-ot: #efef8f; /* Other */
+    --highlight-pp: #ffcfaf; /* Preprocessor */
+    --highlight-sc: #dca3a3; /* SpecialChar */
+    --highlight-ss: #cc9393; /* SpecialString */
+    --highlight-st: #cc9393; /* String */
+    --highlight-vs: #cc9393; /* VerbatimString */
+    --highlight-wa: #7f9f7f; /* Warning */
+}

@@ -1,4 +1,5 @@
 :root {
+    --mono-font: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
     --limited-width: 960px;
     --gray-50: #f9f9f9;
     --gray-100: #ececec;
@@ -156,7 +157,6 @@ nav ul .list-title {
 }
 
 .toc-container nav > ul > li > a {
-    font-size: 1.2em;
     font-weight: bold;
 }
 
