@@ -103,7 +103,7 @@ def create_note_file(content: str, filename: str, directory_id: int = -1):
     if db_row is None:
         raise ValueError
 
-    note_path = Path(db_row["directory_path"]) / filename
+    note_path = (Path(db_row["directory_path"]) / filename).with_suffix(".md")
     # Create a new file but fail if the file already exists
     with note_path.open(mode="x") as f:
         f.write(content)
