@@ -1,0 +1,70 @@
+/* search box */
+
+#searchBox input[type="search"] {
+    border-radius: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    background-color: var(--gray-750);
+    border: none;
+    color: var(--gray-300);
+    transition: background-color .3s ease-in-out;
+}
+
+#searchBox input[type="search"]::placeholder {
+    color: var(--gray-300);
+}
+
+#searchBox:focus-within input[type="search"] {
+    background-color: var(--gray-100);
+    color: var(--gray-950);
+}
+
+#searchBox:focus-within input[type="search"]::placeholder {
+    color: var(--gray-750);
+}
+
+#searchPanel[style*="display: block"] ~ form input[type="search"] {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+}
+
+/* search panel */
+
+#searchPanel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1046;
+    margin-top: 2.5rem;
+    background-color: var(--gray-100);
+    color: var(--gray-950);
+    border-radius: 0 0 1rem 1rem;
+    overflow: hidden;
+    box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.75);
+    display: none;
+}
+
+#searchPanel h5 {
+    color: var(--gray-600);
+}
+
+#searchPanel li {
+    background-color: var(--gray-800);
+    color: var(--gray-300) !important;
+    font-size: 0.85em;
+}
+
+/* search occurrences */
+
+mark {
+    background-color: var(--highlight-bg);
+    color: var(--highlight-color);
+    border-radius: 0.25rem;
+}
+
+::target-text {
+    background-color: var(--highlight-bg);
+    color: var(--highlight-color);
+}

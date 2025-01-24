@@ -1,0 +1,36 @@
+/* note editor */
+
+.note-editor {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 1050;
+}
+
+.note-editor textarea {
+    background-color: var(--primary-bg);
+    border: 0;
+    color: inherit;
+    resize: none;
+    font-size: 1.5em;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100vh;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-bottom: calc(100vh - 5rem);
+    padding-top: 2.5rem;
+}
+
+.note-editor textarea:focus {
+    outline: 0;
+}
+
+@media screen and (min-width: 768px) {
+    .note-editor textarea {
+        padding-left: 15%;
+        padding-right: 15%;
+    }
+}
