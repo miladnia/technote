@@ -124,6 +124,7 @@ nav.vertical-sticky {
     flex-direction: column;
     gap: 1rem;
     align-items: end;
+    z-index: 1;
 }
 
 nav.vertical-sticky > :first-child {

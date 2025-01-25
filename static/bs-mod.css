@@ -1,3 +1,12 @@
+:root {
+    --bs-body-bg: var(--secondary-bg);
+    --bs-tertiary-bg: var(--gray-750);
+}
+
+.modal {
+    --bs-modal-bg: var(--gray-800);
+}
+
 /* offcanvas
  * see https://getbootstrap.com/docs/5.3/components/offcanvas/
  */
@@ -51,13 +60,26 @@ a.btn {
     color: var(--bs-btn-color) !important;
 }
 
-.btn-dark {
+.x-action-btn {
+    line-height: 1;
+    padding: 0.75rem 1rem;
     background-color: var(--primary-bg);
-    border-color: var(--primary-bg);
+    border: none;
+    /* .text-reset */
+    --bs-text-opacity: 1;
+    color: inherit !important;
 }
 
-.btn-dark:hover {
+.x-action-btn:hover,
+.x-action-btn:focus {
     background-color: var(--gray-750);
+    outline: 0;
+}
+
+.x-flat-btn,
+.x-flat-btn:hover,
+.x-flat-btn:focus {
+    background-color: transparent !important;
 }
 
 /* form control */
@@ -66,13 +88,13 @@ input[type="search"]:focus {
     box-shadow: none;
 }
 
-/* additional rules */
+/* extra rules */
 
 .max-vh-75 {
     max-height: 75vh;
     overflow: auto;
 }
 
-.no-default-icon::after {
+.x-no-default-icon::after {
     display: none !important;
 }

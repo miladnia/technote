@@ -22,6 +22,7 @@
     padding-right: 5%;
     padding-bottom: calc(100vh - 5rem);
     padding-top: 2.5rem;
+    font-family: var(--mono-font);
 }
 
 .note-editor textarea:focus {

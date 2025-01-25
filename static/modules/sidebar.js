@@ -13,7 +13,7 @@ function init() {
     sidebar.addEventListener('transitionend', event => {
         // TODO check `target`
         const headerBtn = document.getElementById('headerSidebarBtn');
-        headerBtn.style.display = (0 === sidebar.offsetWidth) ? 'block' : 'none';
+        headerBtn.style.visibility = (0 === sidebar.offsetWidth) ? 'visible' : 'hidden';
     });
 
     // Auto close the side bar if the main element has been clicked
@@ -48,7 +48,7 @@ function open() {
     sidebar.style.removeProperty('width');
     // Hide the sidebar button in the header
     const headerBtn = document.getElementById('headerSidebarBtn');
-    headerBtn.style.display = 'none';
+    headerBtn.style.visibility = 'hidden';
 }
 
 export { init, toggle };
