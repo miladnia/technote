@@ -59,4 +59,10 @@ function onTextFragmentClick(event) {
     }, 100);
 }
 
-export { submitForm, fetchText, disableFormElements, generateTextFragment, onTextFragmentClick };
+export {
+    submitForm,
+    fetchText,
+    disableFormElements,
+    generateTextFragment,
+    onTextFragmentClick
+};

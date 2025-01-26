@@ -1,12 +1,19 @@
 import * as sidebar from './modules/sidebar.js';
 import * as searchBox from './modules/searchbox.js';
 import * as editor from './modules/editor.js';
+import * as explorer from './modules/explorer.js';
+
+const modules = {
+    'sidebar': sidebar,
+    'explorer': explorer
+};
 
 function init() {
     sidebar.init();
     searchBox.init();
     editor.init();
     initKeyboardShortcuts();
+    initModuleEvents();
 }
 
 function initKeyboardShortcuts() {
@@ -48,6 +55,20 @@ function initKeyboardShortcuts() {
             searchBox.focus();
         }
     });
+}
+
+function initModuleEvents() {
+    const toggles = document.querySelectorAll('[data-toggle-module]');
+    toggles.forEach(el => {
+        el.addEventListener('click', handleModuleEvent);
+    });
+}
+
+function handleModuleEvent(event) {
+    event.preventDefault();
+    const target = event.currentTarget;
+    const moduleName = target.getAttribute('data-toggle-module');
+    modules[moduleName]?.toggle();
 }
 
 function toggleTocPanel() {

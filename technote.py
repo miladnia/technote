@@ -144,6 +144,17 @@ def search(query: str):
     return results
 
 
+def ls(relative_path: str) -> dict:
+    path = Path.home() / relative_path
+    if not path.is_dir():
+        raise ValueError
+    return {
+        "directories": sorted([p.name for p in path.iterdir()
+                               if p.is_dir() and not p.name.startswith(".")]),
+        "files": sorted([p.name for p in path.glob("*.md")])
+    }
+
+
 def _render_note_content(note: Note) -> str:
     if not note.path.is_file():
         return ""

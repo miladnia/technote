@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
 from flask_session import Session
 
@@ -20,11 +22,10 @@ def close_connection(exception):
 
 @app.route("/")
 def index():
-    try:
+    try: # FIXME we don't need an exception, just return an empty dict
         grouped_notes = technote.get_grouped_notes_or_fail()
     except ValueError:
-        # The user has not determined any directory of notes yet
-        return redirect("/welcome")
+        grouped_notes = {}
     return render_template("home.html", grouped_notes=grouped_notes)
 
 
@@ -74,7 +75,7 @@ def new_note():
     return redirect(url_for("note", note_id=note_id))
 
 
-@app.route("/search", methods=["GET"])
+@app.route("/search")
 def search():
     query = request.args.get("q")
     if not query:
@@ -83,17 +84,19 @@ def search():
     return jsonify(result)
 
 
-@app.route("/welcome", methods=["GET", "POST"])
-def welcome():
-    if "GET" == request.method:
-        return render_template("welcome.html", example_notes_dir=EXAMPLE_NOTES_DIR)
-    # Add the directories
-    for dir in request.form.getlist("directories"):
-        try:
-            technote.add_directory(dir)
-        except ValueError:
-            flash(f"'{dir}' is not a valid directory.", category="error")
+@app.route("/open", methods=["GET", "POST"])
+def open():
+    try:
+        technote.add_directory(dir)
+    except ValueError:
+        flash(f"'{dir}' is not a valid directory.", category="error")
     return redirect("/")
+
+
+@app.route("/explore", defaults={'relative_path': ''})
+@app.route("/explore/<path:relative_path>")
+def explore(relative_path: str):
+    return jsonify(technote.ls(relative_path))
 
 
 if "__main__" == __name__:
