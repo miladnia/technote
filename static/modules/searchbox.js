@@ -19,6 +19,10 @@ function init() {
     searchBox.addEventListener(
         'focusout', onFocusOut
     );
+    // On Esc pressed
+    searchBox.addEventListener(
+        'keydown', e => 'Escape' === e.code && document.activeElement?.blur()
+    );
 }
 
 function focus() {

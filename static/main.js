@@ -11,26 +11,41 @@ function init() {
 
 function initKeyboardShortcuts() {
     document.addEventListener('keydown', event => {
-        // Shift + Ctrl + [
-        if (event.ctrlKey && event.shiftKey && 'BracketLeft' === event.code) {
-            sidebar.toggle();
+        if (event.ctrlKey && event.shiftKey) {
+            // Shift + Ctrl + [
+            if ('BracketLeft' === event.code) {
+                event.preventDefault();
+                sidebar.toggle();
+            }
+            // Shift + Ctrl + ]
+            else if ('BracketRight' === event.code) {
+                event.preventDefault();
+                toggleTocPanel();
+            }
+
+            return;
         }
-        // Shift + Ctrl + ]
-        else if (event.ctrlKey && event.shiftKey && 'BracketRight' === event.code) {
-            toggleTocPanel();
+
+        if (event.ctrlKey) {
+            // Ctrl + /
+            if ('Slash' === event.code) {
+                event.preventDefault();
+                toggleShortcutsModal();
+            }
+
+            return;
         }
-        // Ctrl + /
-        else if (event.ctrlKey && !event.shiftKey && 'Slash' === event.code) {
+
+        // When user is typing, disable any shortcut that triggers with a single character
+        if ('INPUT' === event.target.tagName ||
+            'TEXTAREA' === event.target.tagName) {
+                return;
+        }
+
+        // Slash (/)
+        if ('Slash' === event.code) {
+            event.preventDefault();
             searchBox.focus();
-        }
-        // Shift + Ctrl + /
-        else if (event.ctrlKey && event.shiftKey && 'Slash' === event.code) {
-            toggleShortcutsModal();
-        }
-        // Esc
-        else if ('Escape' === event.code) {
-            // blur any element that is focused now
-            document.activeElement?.blur();
         }
     });
 }
