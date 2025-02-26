@@ -1,8 +1,9 @@
 from hashlib import md5
+import json
 import sqlite3
 
-from flask import g, render_template
-from config import DATABASE_FILE
+from flask import g, render_template, url_for
+from config import DATABASE_FILE, VITE_MANIFEST
 
 
 def get_db():
@@ -45,6 +46,30 @@ def render_badrequest():
 def render_alert(message: str, code: int):
     """Render an alert message."""
     return render_template("alert.html", message=message, code=code), code
+
+
+def render_vite_assets(dev_mode: bool) -> str:
+    if dev_mode:
+        return """
+            <script type="module">
+                import RefreshRuntime from 'http://localhost:5173/@react-refresh'
+                RefreshRuntime.injectIntoGlobalHook(window)
+                window.$RefreshReg$ = () => {}
+                window.$RefreshSig$ = () => (type) => type
+                window.__vite_plugin_react_preamble_installed__ = true
+            </script>
+            <script type="module" src="http://localhost:5173/@vite/client"></script>
+            <script type="module" src="http://localhost:5173/src/main.jsx"></script>
+        """
+    else:
+        assets = ""
+        with open(VITE_MANIFEST) as f:
+            manifest = json.load(f)
+        for v in manifest.values():
+            if v.get("isEntry", False):
+                asset_url = url_for("static", filename=f"dist/{v.get("file")}");
+                assets += f'<script type="module" src="{asset_url}"></script>'
+        return assets
 
 
 def prettify(name: str) -> str:

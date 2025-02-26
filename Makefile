@@ -1,15 +1,18 @@
-# Makefile
-
-.PHONY: install fresh db clean run dev
+.PHONY: install fresh db build clean run dev
 
 install:
-	pip3 install -r requirements.txt
+	python3 -m venv .venv
+	.venv/bin/pip install -r requirements.txt
 	$(MAKE) db
+	npm install
 
 fresh: clean db
 
 db:
-	python3 scripts/init_db.py
+	.venv/bin/python scripts/init_db.py
+
+build:
+	npm run build
 
 clean:
 	@ read -p "Are you sure? (y/n) " ans; \
@@ -20,7 +23,8 @@ clean:
 	rm -rf instance/
 
 run:
-	python3 app.py
+	.venv/bin/python app.py
 
 dev:
-	flask run --debug
+	npm run dev &
+	.venv/bin/flask run --debug

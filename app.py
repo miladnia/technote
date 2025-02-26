@@ -4,7 +4,7 @@ from flask import Flask, flash, jsonify, redirect, render_template, request, url
 from flask_session import Session
 
 from config import EXAMPLE_NOTES_DIR
-from helpers import release_resources, render_notfound, render_badrequest
+from helpers import release_resources, render_notfound, render_badrequest, render_vite_assets
 import technote
 
 app = Flask(__name__)
@@ -13,6 +13,13 @@ app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+
+@app.context_processor
+def inject_helpers():
+    def assets():
+        return render_vite_assets(app.debug)
+    return {"assets": assets}
 
 
 @app.teardown_appcontext
