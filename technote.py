@@ -148,11 +148,8 @@ def ls(relative_path: str) -> dict:
     path = Path.home() / relative_path
     if not path.is_dir():
         raise ValueError
-    return {
-        "directories": sorted([p.name for p in path.iterdir()
-                               if p.is_dir() and not p.name.startswith(".")]),
-        "files": sorted([p.name for p in path.glob("*.md")])
-    }
+    return [{"name": p.name, "relative_path": f"{relative_path}/{p.name}", "path": str(p.resolve()), "type": "directory"} for p in path.iterdir()
+                if p.is_dir() and not p.name.startswith(".")] + [{"name": p.name, "path": "", "type": "file"} for p in path.glob("*.md")]
 
 
 def _render_note_content(note: Note) -> str:

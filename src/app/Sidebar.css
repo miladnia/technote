@@ -1,0 +1,50 @@
+/* sidebar */
+
+.sidebar {
+    --sidebar-width: 0;
+    --sidebar-visible-width: 100vw;
+    --sidebar-max-width: var(--sidebar-visible-width);
+    --sidebar-position: fixed;
+    --sidebar-bottom: 0;
+    height: 100vh;
+    overflow-x: hidden;
+    transition: width .3s ease-in-out;
+    position: var(--sidebar-position);
+    top: 0;
+    bottom: var(--sidebar-bottom);
+    left: 0;
+    z-index: 1045;
+    width: var(--sidebar-width);
+    max-width: var(--sidebar-max-width);
+}
+
+.sidebar > * {
+    min-width: var(--sidebar-visible-width);
+}
+
+.visible-sidebar {
+    width: var(--sidebar-visible-width);
+}
+
+.sidebar ul {
+    padding: 0;
+}
+
+.sidebar li {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+@media screen and (min-width: 768px) {
+    .sidebar {
+        --sidebar-position: sticky;
+        --sidebar-width: 22vw;
+        --sidebar-visible-width: var(--sidebar-width);
+        --sidebar-max-width: 400px;
+        --sidebar-bottom: auto;
+    }
+
+    #headerSidebarBtn {
+        visibility: hidden;
+    }
+}

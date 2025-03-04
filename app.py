@@ -100,7 +100,7 @@ def open():
     return redirect("/")
 
 
-@app.route("/explore", defaults={'relative_path': ''})
+@app.route("/explore/", defaults={'relative_path': ''})
 @app.route("/explore/<path:relative_path>")
 def explore(relative_path: str):
     return jsonify(technote.ls(relative_path))

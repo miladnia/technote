@@ -88,6 +88,13 @@ input[type="search"]:focus {
     box-shadow: none;
 }
 
+/* modal */
+
+.x-modal-backdrop {
+    position: absolute;
+    z-index: -1;   
+}
+
 /* extra rules */
 
 .max-vh-75 {

@@ -1,7 +1,8 @@
 function init() {
-    const sidebar = document.getElementById('sidebar');
+    const sidebar = document.querySelector('sidebar');
 
     if (!sidebar) {
+        console.log("sidebar not found")
         return;
     }
 
@@ -28,7 +29,7 @@ function init() {
 }
 
 function toggle() {
-    const sidebar = document.getElementById('sidebar');
+    const sidebar = document.querySelector('sidebar');
     if (sidebar.offsetWidth > 0) {
         close();
     } else {
@@ -37,13 +38,13 @@ function toggle() {
 }
 
 function close() {
-    const sidebar = document.getElementById('sidebar');
+    const sidebar = document.querySelector('sidebar');
     sidebar.style.width = '0px';
     sidebar.classList.remove('full-width');
 }
 
 function open() {
-    const sidebar = document.getElementById('sidebar');
+    const sidebar = document.querySelector('sidebar');
     sidebar.classList.add('full-width');
     sidebar.style.removeProperty('width');
     // Hide the sidebar button in the header
