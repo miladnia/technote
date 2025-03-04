@@ -62,14 +62,17 @@ def render_vite_assets(dev_mode: bool) -> str:
             <script type="module" src="http://localhost:5173/src/main.jsx"></script>
         """
     else:
-        assets = ""
+        assets = []
         with open(VITE_MANIFEST) as f:
             manifest = json.load(f)
         for v in manifest.values():
             if v.get("isEntry", False):
-                asset_url = url_for("static", filename=f"dist/{v.get("file")}");
-                assets += f'<script type="module" src="{asset_url}"></script>'
-        return assets
+                asset_url = url_for("static", filename=f"dist/{v.get("file")}")
+                assets.append(f'<script type="module" src="{asset_url}"></script>')
+                for css in v.get("css", []):
+                    asset_url = url_for("static", filename=f"dist/{css}")
+                    assets.append(f'<link href="{asset_url}" rel="stylesheet">')
+        return "\n".join(assets)
 
 
 def prettify(name: str) -> str:
