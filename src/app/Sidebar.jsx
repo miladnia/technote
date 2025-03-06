@@ -12,7 +12,7 @@ function Sidebar() {
   const grouped_notes = [];
   return (
     <aside
-      class={`col-12 px-0 sidebar${isOpen ? ' visible-sidebar' : ''}`}
+      className={`col-12 px-0 sidebar${isOpen ? ' visible-sidebar' : ''}`}
       style={!isOpen ? {width: '0px'} : {}}>
         <div className="row mx-0 flex-column h-100">
           <Header onClose={handleClose} />
