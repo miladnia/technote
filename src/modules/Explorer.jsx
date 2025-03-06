@@ -5,8 +5,8 @@ function Explorer({ apiUrl }) {
   const [currentDir, setCurrentDir] = useState('');
 
   useEffect(() => {
-    const path = currentDir?.['relative_path'] || '';
-    const url = `${apiUrl}/${path}`;
+    const directory_path = encodeURIComponent(currentDir?.['path'] || '');
+    const url = `${apiUrl}/${directory_path}`;
     fetch(url)
       .then(res => res.json())
       .then(data => setEntries(data));
@@ -47,7 +47,7 @@ function Row({ entry, onDirSelect }) {
             {entry['name']}
         </button>
       </th>
-      <td>{entry['path']}</td>
+      <td>{entry['real_path']}</td>
     </tr>
   );
 }

@@ -144,12 +144,48 @@ def search(query: str):
     return results
 
 
-def ls(relative_path: str) -> dict:
-    path = Path.home() / relative_path
-    if not path.is_dir():
-        raise ValueError
-    return [{"name": p.name, "relative_path": f"{relative_path}/{p.name}", "path": str(p.resolve()), "type": "directory"} for p in path.iterdir()
-                if p.is_dir() and not p.name.startswith(".")] + [{"name": p.name, "path": "", "type": "file"} for p in path.glob("*.md")]
+def list_directory(directory: str) -> list:
+    home = Path.home().resolve()
+    # Normalize the path (e.g. resolve ".." components)
+    cwd = (home / directory).resolve()
+
+    if not cwd.is_dir():
+        raise ValueError(f"Not found: {cwd}")
+
+    # Ensure cwd is inside home
+    if not cwd.is_relative_to(home):
+        raise ValueError(f"Access denied: {cwd}")
+
+    def create_entry(name, path, real_path, type_="directory"):
+        return {
+            "name": name,
+            "path": str(path),
+            "real_path": str(real_path),
+            "type": type_
+        }
+
+    relative_path = cwd.relative_to(home)
+
+    current_directory = create_entry(".", relative_path, cwd)
+    parent_directory = create_entry("..", relative_path.parent, cwd.parent)
+    sub_directories = sorted(
+        [
+            create_entry(p.name, relative_path / p.name, p.resolve())
+            for p in cwd.iterdir() if p.is_dir() and not p.name.startswith(".")
+        ],
+        key=lambda entry: entry["name"]
+    )
+    markdown_files = sorted(
+        [create_entry(p.name, "", "", type_="file") for p in cwd.glob("*.md")],
+        key=lambda entry: entry["name"]
+    )
+
+    return [
+        current_directory,
+        parent_directory,
+        *sub_directories,
+        *markdown_files
+    ]
 
 
 def _render_note_content(note: Note) -> str:

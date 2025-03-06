@@ -100,10 +100,12 @@ def open():
     return redirect("/")
 
 
-@app.route("/explore/", defaults={'relative_path': ''})
-@app.route("/explore/<path:relative_path>")
-def explore(relative_path: str):
-    return jsonify(technote.ls(relative_path))
+@app.route("/explore/", defaults={'directory': ''})
+@app.route("/explore/<path:directory>")
+def explore(directory: str):
+    return jsonify(
+        technote.list_directory(directory)
+    )
 
 
 if "__main__" == __name__:
