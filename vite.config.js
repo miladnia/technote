@@ -14,6 +14,8 @@ export default defineConfig({
     copyPublicDir: false,
   },
   server: {
+    origin: 'http://localhost:5173',
+    port: 5173,
     strictPort: true,
   },
 })

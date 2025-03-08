@@ -144,7 +144,7 @@ def search(query: str):
     return results
 
 
-def list_directory(directory: str) -> list:
+def list_directory(directory: str) -> dict:
     home = Path.home().resolve()
     # Normalize the path (e.g. resolve ".." components)
     cwd = (home / directory).resolve()
@@ -176,16 +176,16 @@ def list_directory(directory: str) -> list:
         key=lambda entry: entry["name"]
     )
     markdown_files = sorted(
-        [create_entry(p.name, "", "", type_="file") for p in cwd.glob("*.md")],
+        [create_entry(p.name, "", p.resolve(), type_="file") for p in cwd.glob("*.md")],
         key=lambda entry: entry["name"]
     )
 
-    return [
-        current_directory,
-        parent_directory,
-        *sub_directories,
-        *markdown_files
-    ]
+    return {
+        "current_directory": current_directory,
+        "parent_directory": parent_directory,
+        "directories": sub_directories,
+        "files": markdown_files,
+    }
 
 
 def _render_note_content(note: Note) -> str:

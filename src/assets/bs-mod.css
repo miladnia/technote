@@ -95,6 +95,14 @@ input[type="search"]:focus {
     z-index: -1;
 }
 
+/* tables
+ * see https://getbootstrap.com/docs/5.3/content/tables/
+ */
+
+ .x-transparent-table {
+    --bs-table-bg: transparent;
+ }
+
 /* extra rules */
 
 .max-vh-75 {
