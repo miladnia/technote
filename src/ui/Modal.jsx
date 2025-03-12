@@ -1,6 +1,7 @@
 import { createPortal } from 'react-dom';
+import clsx from 'clsx';
 
-function Modal({ title, open, onClose, children }) {
+function Modal({ title, open, onClose, noPaddings = false, children }) {
   return createPortal(
     <div
       className='modal'
@@ -20,7 +21,7 @@ function Modal({ title, open, onClose, children }) {
               </h1>
               <button type="button" className="btn-close" onClick={onClose} aria-label="Close"></button>
             </div>
-            <div className="modal-body">
+            <div className={clsx("modal-body", noPaddings && "p-0")}>
               {children}
             </div>
           </div>

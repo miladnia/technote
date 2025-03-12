@@ -2,7 +2,7 @@ from hashlib import md5
 import json
 import sqlite3
 
-from flask import g, render_template, url_for
+from flask import g, jsonify, render_template, Response, url_for
 from config import DATABASE_FILE, VITE_MANIFEST
 
 
@@ -35,15 +35,22 @@ def dbhash(string: str) -> str:
     return md5(string.encode()).hexdigest()
 
 
-def render_notfound():
+def api_response(result: any = None, message: str = None) -> Response:
+    return jsonify({
+        "result": result,
+        "message": message,
+    })
+
+
+def render_notfound() -> str:
     return render_alert("Oops! The page you have requested was not found.", 404)
 
 
-def render_badrequest():
+def render_badrequest() -> str:
     return render_alert("Bad request!", 400)
 
 
-def render_alert(message: str, code: int):
+def render_alert(message: str, code: int) -> str:
     """Render an alert message."""
     return render_template("alert.html", message=message, code=code), code
 

@@ -3,8 +3,10 @@
     --bs-tertiary-bg: var(--gray-750);
 }
 
-.modal {
-    --bs-modal-bg: var(--gray-800);
+/* backgrounds */
+
+.bg-primary {
+    background-color: var(--primary-bg) !important;
 }
 
 /* offcanvas
@@ -89,6 +91,10 @@ input[type="search"]:focus {
 }
 
 /* modal */
+
+.modal {
+    --bs-modal-bg: var(--primary-bg);
+}
 
 .x-modal-backdrop {
     position: absolute;

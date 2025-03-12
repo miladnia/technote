@@ -1,19 +1,22 @@
 import { useEffect, useState } from 'react';
+import { request } from '../utils';
 
-function Explorer({ apiUrl }) {
-  const [entries, setEntries] = useState();
-  const [currentDir, setCurrentDir] = useState('');
+function Explorer({ apiUrl, onDirectoryChange }) {
+  const [entries, setEntries] = useState(null);
+
+  const loadEntries = (path = '') => {
+    request([apiUrl, path], (entries) => {
+      setEntries(entries);
+      onDirectoryChange(entries.current_directory?.real_path);
+    });
+  };
 
   useEffect(() => {
-    const dirPath = encodeURIComponent(currentDir?.path || '');
-    const url = `${apiUrl}/${dirPath}`;
-    fetch(url)
-      .then(res => res.json())
-      .then(data => setEntries(data));
-  }, [currentDir]);
+    loadEntries();
+  }, []);
 
-  const handleDirClick = (entry) => {
-    setCurrentDir(entry);
+  const handleEntryClick = (entry) => {
+    loadEntries(entry.path);
   };
 
   return (
@@ -27,14 +30,14 @@ function Explorer({ apiUrl }) {
       <tbody>
         {entries && (
           <>
-            <ParentEntry entry={entries.parent_directory} onClick={handleDirClick} />
-            {entries.directories.map(entry => (
+            <ParentEntry entry={entries.parent_directory} onClick={handleEntryClick} />
+            {entries.directories?.map(entry => (
               <DirectoryEntry
                 key={entry.real_path}
                 entry={entry}
-                onClick={handleDirClick} />
+                onClick={handleEntryClick} />
             ))}
-            {entries.files.map(entry => (
+            {entries.files?.map(entry => (
               <FileEntry key={entry.real_path} entry={entry} />
             ))}
           </>

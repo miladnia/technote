@@ -26,6 +26,10 @@
     width: var(--sidebar-visible-width);
 }
 
+.invisible-sidebar {
+    width: 0;
+}
+
 .sidebar ul {
     padding: 0;
 }

@@ -1,6 +1,6 @@
-from itertools import groupby
 from pathlib import Path
 import re
+from sqlite3 import IntegrityError
 
 from flask import url_for
 from markupsafe import Markup
@@ -8,72 +8,119 @@ import pypandoc as pandoc
 
 from config import CACHE_ENABLED, CACHE_DIR, PANDOC_TEMPLATE
 from helpers import dbhash, get_db, prettify, query_db
-from models import Note
+from models import DataOptions, Directory, Note
 
 
-def add_directory(directory_path: str):
-    """Add the directory with all the `.md` files to the database"""
+def list_all(directoryOptions: DataOptions, noteOptions: DataOptions) -> dict:
+    query = """
+    SELECT *
+      FROM directories
+     ORDER BY directory_name
+    """
+    db_rows = query_db(query)
+    if not db_rows:
+        return {}
+
+    directory_list = [Directory.from_db_row(row, directoryOptions) for row in db_rows]
+    if len(directory_list) == 1:
+        directory = directory_list[0]
+        return {
+            "directory": {
+                "name": directory.name,
+                "note_list": find_notes_by_directory(directory.id, noteOptions),
+            }
+        }
+
+    return {
+        "directory_list": directory_list
+    }
+
+
+def list_directory(directory_id: str, noteOptions: DataOptions) -> dict:
+    note_list = find_notes_by_directory(directory_id, noteOptions)
+    directory_name = note_list[0].directory_name if note_list else get_directory(directory_id).name
+    return {
+        "directory": {
+            "name": directory_name,
+            "note_list": note_list,
+        }
+    }
+
+
+def add_directory(directory_path: str) -> int:
+    """
+    Add the directory with all the `.md` files to the database
+    and return the id of the directory.
+    """
 
     if not directory_path:
-        return
+        raise ValueError("Empty value for directory.")
 
     dir = Path(directory_path)
     # Validate the directory
     if not dir.is_dir():
-        raise ValueError
+        raise ValueError(f"Invalid directory: '{directory_path}'")
     # Get all the Markdown files located in the directory
     md_files = dir.glob("*.md")
 
     with get_db() as db:
         # Create a new directory in the database
-        cur = db.execute(
-            "INSERT INTO directories(directory_path) VALUES (?)", (str(dir.resolve()),)
-        )
+        try:
+            query = """
+            INSERT INTO directories (directory_id, directory_path, directory_name)
+            VALUES (?, ?, ?)
+            """
+            directory_id = dbhash(str(dir.resolve()))
+            cur = db.execute(query, (
+                directory_id,
+                str(dir.resolve()),
+                dir.stem,
+            ))
+        except IntegrityError:
+            raise ValueError(f"Duplicate directory: '{directory_path}'")
         # Create a new note with a unique hash and a pretty name in the database
-        db.executemany(
-            "INSERT INTO notes(note_id, note_pretty_name, note_filename, note_directory) VALUES (?, ?, ?, ?)",
-            [(dbhash(str(f.resolve())), prettify(f.stem), f.name, cur.lastrowid,) for f in md_files]
+        query = """
+        INSERT INTO notes (
+            note_id,
+            note_pretty_name,
+            note_filename,
+            note_directory
         )
+        VALUES (?, ?, ?, ?)
+        """
+        db.executemany(query, [(
+                dbhash(str(f.resolve())),
+                prettify(f.stem),
+                f.name,
+                directory_id,
+            ) for f in md_files
+        ])
+    return directory_id
 
 
-def get_all():
+def find_all() -> list[Note]:
     db_rows = query_db(
         "SELECT * FROM notes JOIN directories ON note_directory = directory_id ORDER BY note_directory, note_pretty_name"
     )
-    notes = []
-    for db_row in db_rows:
-        notes.append(Note(
-            id=db_row["note_id"],
-            name=db_row["note_pretty_name"],
-            path=Path(db_row["directory_path"]) / str(db_row["note_filename"])
-        ))
-    return notes
+    return [Note.from_db_row(row) for row in db_rows]
 
 
-def get_grouped_notes_or_fail():
-    notes = get_all()
-    if not notes:
-        # Check if user has determined any directory of notes yet
-        db_row = query_db(
-            "SELECT COUNT(*) as count FROM directories", one=True
-        )
-        if 0 == db_row["count"]:
-            raise ValueError
-    return groupby(notes, key=lambda note: note.path.parent.stem)
+def find_notes_by_directory(directory_id: str, options: DataOptions = None) -> list[Note]:
+    db_rows = query_db(
+        "SELECT * FROM notes JOIN directories ON note_directory = directory_id WHERE directory_id = ? ORDER BY note_pretty_name",
+        (directory_id,)
+    )
+    return [Note.from_db_row(row, options) for row in db_rows]
 
 
-def find_note(note_id: str, with_content: bool=False, with_preview: bool=False):
+def get_note(note_id: str, with_content: bool=False, with_preview: bool=False) -> Note:
     db_row = query_db(
         "SELECT * FROM notes JOIN directories ON note_directory = directory_id WHERE note_id = ?",
         (note_id,), one=True
     )
     if db_row is None:
-        raise ValueError
-    note = Note(
-        id=db_row["note_id"],
-        name=db_row["note_pretty_name"],
-        path=Path(db_row["directory_path"]) / str(db_row["note_filename"])
-    )
+        raise ValueError("Note not found.")
+    note = Note.from_db_row(db_row)
     if with_content:
         note.content = note.path.read_text()
     if with_preview:
@@ -81,22 +128,32 @@ def find_note(note_id: str, with_content: bool=False, with_preview: bool=False):
     return note
 
 
+def get_directory(directory_id: str) -> Directory:
+    query = """
+    SELECT * FROM directories WHERE directory_id = ?
+    """
+    db_row = query_db(query, (directory_id,), one=True)
+    if db_row is None:
+        raise ValueError("Directory not found.")
+    return Directory.from_db_row(db_row)
+
+
 def write_note_content(note_id: str, content: str):
-    note = find_note(note_id)
+    note = get_note(note_id)
     note.path.write_text(content)
 
 
-def create_note_file(content: str, filename: str, directory_id: int = -1):
-    if directory_id < 0:
-        # Get the first directory (FIXME this is just temporary)
+def create_note_file(content: str, filename: str, directory_id: str | None = None):
+    if directory_id is None:
+        # Get the first directory (FIXME select a directory to save in)
         db_row = query_db(
-            "SELECT directory_id, directory_path FROM directories ORDER BY directory_id ASC LIMIT 1",
+            "SELECT * FROM directories ORDER BY directory_id ASC LIMIT 1",
             one=True
         )
         directory_id = db_row["directory_id"]
     else:
         db_row = query_db(
-            "SELECT directory_path FROM directories WHERE directory_id = ?",
+            "SELECT * FROM directories WHERE directory_id = ?",
             (directory_id,), one=True
         )
 
@@ -123,7 +180,7 @@ def search(query: str):
         return []
     pattern = re.compile(rf"{re.escape(query)}")
     results = []
-    for note in get_all():
+    for note in find_all():
         if not note.path.is_file():
             continue
         with note.path.open("r", encoding="utf-8") as f:
@@ -144,7 +201,9 @@ def search(query: str):
     return results
 
 
-def list_directory(directory: str) -> dict:
+def list_filesystem(directory: str) -> dict:
+    """ List filesystem directory. """
+    
     home = Path.home().resolve()
     # Normalize the path (e.g. resolve ".." components)
     cwd = (home / directory).resolve()
