@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ExplorerModal } from "./helpers";
+import { OpenFolderModal } from "./helpers";
 import { Loading } from "../ui";
 import { request } from "../utils";
 
@@ -155,7 +155,7 @@ function OpenFolderButton({ className, onFolderOpen, children }) {
       >
         {children || <i className="bi bi-folder2"></i>}
       </button>
-      <ExplorerModal
+      <OpenFolderModal
         open={isModalOpen}
         onClose={handleClose}
         onDirectoryOpen={onFolderOpen}

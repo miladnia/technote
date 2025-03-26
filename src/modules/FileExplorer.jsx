@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { request } from '../utils';
 
-function Explorer({ apiUrl, onDirectoryChange }) {
+function FileExplorer({ apiUrl, onDirectoryChange }) {
   const [entries, setEntries] = useState(null);
 
   const loadEntries = (path = '') => {
@@ -91,4 +91,4 @@ function ParentEntry({ entry, onClick }) {
   );
 }
 
-export default Explorer;
+export default FileExplorer;

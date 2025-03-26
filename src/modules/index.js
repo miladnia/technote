@@ -1,2 +1,2 @@
 
-export { default as Explorer } from './Explorer.jsx';
+export { default as FileExplorer } from './FileExplorer.jsx';

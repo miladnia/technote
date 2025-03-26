@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
 import { requestPOST } from '../../utils';
-import { Explorer } from '../../modules';
+import { FileExplorer } from '../../modules';
 import { Modal } from '../../ui';
 
-function ExplorerModal({ open, onClose, onDirectoryOpen }) {
+function OpenFolderModal({ open, onClose, onDirectoryOpen }) {
   const [navigatedDirectory, setNavigatedDirectory] = useState('');
   const directoryInput = useRef(null);
 
@@ -36,11 +36,11 @@ function ExplorerModal({ open, onClose, onDirectoryOpen }) {
           </div>
         </section>
         <section className="row px-3">
-          <Explorer apiUrl="/explore" onDirectoryChange={handleDirectoryChange} />
+          <FileExplorer apiUrl="/explore" onDirectoryChange={handleDirectoryChange} />
         </section>
       </div>
     </Modal>
   );
 }
 
-export default ExplorerModal;
+export default OpenFolderModal;
