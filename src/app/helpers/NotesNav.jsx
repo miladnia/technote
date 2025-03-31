@@ -56,13 +56,12 @@ function NotesNav() {
 
   return (
     <>
-      <OpenDirectoryButton onDirectoryOpen={handleDirectoryOpen} />
-      <hr />
       {entries.directory && (
         <SingleDirectory
           notes={entries.directory.note_list}
           title={entries.directory.name}
           onDirectoryClose={() => handleDirectoryClose(entries.directory)}
+          onDirectoryOpen={handleDirectoryOpen}
           hasBackToHome={!isHome}
           onBackToHomeClick={handleBackToHomeClick}
         />
@@ -71,18 +70,31 @@ function NotesNav() {
         <DirectoryList
           directories={entries.directory_list}
           onDirectoryClick={handleDirectoryClick}
+          onDirectoryOpen={handleDirectoryOpen}
         />
       )}
     </>
   );
 }
 
-function DirectoryList({ directories, onDirectoryClick }) {
+function DirectoryList({ directories, onDirectoryClick, onDirectoryOpen }) {
   return (
     <>
       <div className="d-flex align-items-center list-title">
         <i className="bi bi-folder"></i>
-        <strong className="my-0 ms-2">Directories</strong>
+        <div className="flex-grow-1 ms-2">
+          <strong>Directories</strong>
+        </div>
+        <DropDownMenu>
+          <li>
+            <OpenDirectoryButton 
+              className="dropdown-item d-flex align-items-center"
+              onDirectoryOpen={onDirectoryOpen}>
+                <i className="bi bi-folder-plus me-2"></i>
+                Open a directory
+            </OpenDirectoryButton>
+          </li>
+        </DropDownMenu>
       </div>
       <ul className="ps-3 py-2">
         {directories.map((dir) => (
@@ -105,6 +117,7 @@ function SingleDirectory({
   notes,
   title,
   onDirectoryClose,
+  onDirectoryOpen,
   hasBackToHome,
   onBackToHomeClick,
 }) {
@@ -126,6 +139,14 @@ function SingleDirectory({
             <i className="bi bi-x-circle me-2"></i>
             Close the directory
           </DropDownItem>
+          <li>
+            <OpenDirectoryButton 
+              className="dropdown-item d-flex align-items-center"
+              onDirectoryOpen={onDirectoryOpen}>
+                <i className="bi bi-folder-plus me-2"></i>
+                Open a directory
+            </OpenDirectoryButton>
+          </li>
         </DropDownMenu>
       </div>
       <ul className="ps-3 py-2">
