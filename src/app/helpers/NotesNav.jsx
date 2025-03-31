@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { OpenFolderModal } from "./helpers";
-import { Loading } from "../ui";
-import { request } from "../utils";
+import { OpenDirectoryButton } from ".";
+import { DropDownMenu, DropDownItem, Loading } from "../../ui";
+import { request, requestPOST } from "../../utils";
 
 function NotesNav() {
   const [entries, setEntries] = useState(null);
@@ -17,16 +17,28 @@ function NotesNav() {
     });
   };
 
-  const handleFolderOpen = (notes) => {
+  const handleDirectoryOpen = (notes) => {
     setEntries(notes);
     setIsHome(false);
+  };
+
+  const handleDirectoryClose = (directory) => {
+    requestPOST(
+      "/close",
+      {
+        directory_id: directory.id,
+      },
+      () => {
+        loadEntries();
+      }
+    );
   };
 
   const handleBackToHomeClick = () => {
     loadEntries();
   };
 
-  const handleFolderClick = (directory) => {
+  const handleDirectoryClick = (directory) => {
     loadEntries(directory.url);
   };
 
@@ -39,47 +51,48 @@ function NotesNav() {
   }
 
   if (isEmpty) {
-    return <EmptyNotesMessage onFolderOpen={handleFolderOpen} />;
+    return <EmptyNotesMessage onDirectoryOpen={handleDirectoryOpen} />;
   }
 
   return (
     <>
-      <OpenFolderButton onFolderOpen={handleFolderOpen} />
+      <OpenDirectoryButton onDirectoryOpen={handleDirectoryOpen} />
       <hr />
       {entries.directory && (
-        <FolderNotes
+        <SingleDirectory
           notes={entries.directory.note_list}
           title={entries.directory.name}
-          backToHome={!isHome}
+          onDirectoryClose={() => handleDirectoryClose(entries.directory)}
+          hasBackToHome={!isHome}
           onBackToHomeClick={handleBackToHomeClick}
         />
       )}
       {entries.directory_list && (
-        <FolderList
-          folders={entries.directory_list}
-          onFolderClick={handleFolderClick}
+        <DirectoryList
+          directories={entries.directory_list}
+          onDirectoryClick={handleDirectoryClick}
         />
       )}
     </>
   );
 }
 
-function FolderList({ folders, onFolderClick }) {
+function DirectoryList({ directories, onDirectoryClick }) {
   return (
     <>
       <div className="d-flex align-items-center list-title">
         <i className="bi bi-folder"></i>
-        <strong className="my-0 ms-2">Folders</strong>
+        <strong className="my-0 ms-2">Directories</strong>
       </div>
       <ul className="ps-3 py-2">
-        {folders.map((folder) => (
-          <li key={folder.id}>
+        {directories.map((dir) => (
+          <li key={dir.id}>
             <button
               className="btn btn-link w-100 text-start"
-              title={folder.path}
-              onClick={() => onFolderClick(folder)}
+              title={dir.path}
+              onClick={() => onDirectoryClick(dir)}
             >
-              {folder.name}
+              {dir.name}
             </button>
           </li>
         ))}
@@ -88,11 +101,17 @@ function FolderList({ folders, onFolderClick }) {
   );
 }
 
-function FolderNotes({ notes, title, backToHome, onBackToHomeClick }) {
+function SingleDirectory({
+  notes,
+  title,
+  onDirectoryClose,
+  hasBackToHome,
+  onBackToHomeClick,
+}) {
   return (
     <>
       <div className="d-flex align-items-center list-title">
-        {backToHome ? (
+        {hasBackToHome ? (
           <button className="btn" onClick={onBackToHomeClick}>
             <i className="bi bi-arrow-left"></i>
           </button>
@@ -102,6 +121,12 @@ function FolderNotes({ notes, title, backToHome, onBackToHomeClick }) {
         <div className="flex-grow-1 ms-2">
           <strong>{title}</strong>
         </div>
+        <DropDownMenu>
+          <DropDownItem onClick={onDirectoryClose}>
+            <i className="bi bi-x-circle me-2"></i>
+            Close the directory
+          </DropDownItem>
+        </DropDownMenu>
       </div>
       <ul className="ps-3 py-2">
         {notes.map((note) => (
@@ -116,51 +141,22 @@ function FolderNotes({ notes, title, backToHome, onBackToHomeClick }) {
   );
 }
 
-function EmptyNotesMessage({ onFolderOpen }) {
+function EmptyNotesMessage({ onDirectoryOpen }) {
   return (
     <div className="h-50 d-flex align-items-center justify-content-center">
       <div className="text-center">
         <p>No notes here!</p>
-        <OpenFolderButton
+        <OpenDirectoryButton
           className="btn btn-primary"
-          onFolderOpen={onFolderOpen}
+          onDirectoryOpen={onDirectoryOpen}
         >
           Open a directory
-        </OpenFolderButton>
+        </OpenDirectoryButton>
         <button className="btn btn-sm btn-secondary my-3" type="button">
           Try with example notes
         </button>
       </div>
     </div>
-  );
-}
-
-function OpenFolderButton({ className, onFolderOpen, children }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleClose = () => {
-    setIsModalOpen(false);
-  };
-
-  return (
-    <>
-      <button
-        className={className || "btn btn-sm btn-secondary"}
-        type="button"
-        onClick={showModal}
-      >
-        {children || <i className="bi bi-folder2"></i>}
-      </button>
-      <OpenFolderModal
-        open={isModalOpen}
-        onClose={handleClose}
-        onDirectoryOpen={onFolderOpen}
-      />
-    </>
   );
 }
 

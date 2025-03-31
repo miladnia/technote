@@ -1,6 +1,6 @@
 import { useState } from "react";
 import clsx from "clsx";
-import NotesNav from "./NotesNav";
+import { NotesNav } from "./helpers";
 import "./Sidebar.css";
 
 function Sidebar() {

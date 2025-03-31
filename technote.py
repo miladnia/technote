@@ -15,6 +15,7 @@ def list_all(directoryOptions: DataOptions, noteOptions: DataOptions) -> dict:
     query = """
     SELECT *
       FROM directories
+     WHERE is_directory_hidden = 0
      ORDER BY directory_name
     """
     db_rows = query_db(query)
@@ -27,6 +28,7 @@ def list_all(directoryOptions: DataOptions, noteOptions: DataOptions) -> dict:
         return {
             "directory": {
                 "name": directory.name,
+                "id": directory.id,
                 "note_list": find_notes_by_directory(directory.id, noteOptions),
             }
         }
@@ -42,6 +44,7 @@ def list_directory(directory_id: str, noteOptions: DataOptions) -> dict:
     return {
         "directory": {
             "name": directory_name,
+            "id": directory_id,
             "note_list": note_list,
         }
     }
@@ -62,6 +65,8 @@ def add_directory(directory_path: str) -> int:
         raise ValueError(f"Invalid directory: '{directory_path}'")
     # Get all the Markdown files located in the directory
     md_files = dir.glob("*.md")
+    # Create a unique hash for the directory
+    directory_id = dbhash(str(dir.resolve()))
 
     with get_db() as db:
         # Create a new directory in the database
@@ -70,14 +75,18 @@ def add_directory(directory_path: str) -> int:
             INSERT INTO directories (directory_id, directory_path, directory_name)
             VALUES (?, ?, ?)
             """
-            directory_id = dbhash(str(dir.resolve()))
-            cur = db.execute(query, (
+            db.execute(query, (
                 directory_id,
                 str(dir.resolve()),
                 dir.stem,
             ))
         except IntegrityError:
-            raise ValueError(f"Duplicate directory: '{directory_path}'")
+            # The directory already exists in the database just ensure it is not hidden
+            query = """
+            UPDATE directories SET is_directory_hidden = 0 WHERE directory_id = ?
+            """
+            db.execute(query, (directory_id,))
+            return directory_id
         # Create a new note with a unique hash and a pretty name in the database
         query = """
         INSERT INTO notes (
@@ -96,6 +105,14 @@ def add_directory(directory_path: str) -> int:
             ) for f in md_files
         ])
     return directory_id
+
+
+def hide_directory(directory_id):
+    query = """
+    UPDATE directories SET is_directory_hidden = 1 WHERE directory_id = ?
+    """
+    with get_db() as db:
+        db.execute(query, (directory_id,))
 
 
 def find_all() -> list[Note]:

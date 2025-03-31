@@ -42,7 +42,9 @@ function requestPOST(url, payload, resultCallback, messageCallback) {
     .then(data => {
       if (data.message) {
         console.warn('[request]', data.message);
-        messageCallback(data.message);
+        if (messageCallback) {
+          messageCallback(data.message);
+        }
       } else if (data.result) {
         resultCallback(data.result);
       } else {
@@ -51,7 +53,9 @@ function requestPOST(url, payload, resultCallback, messageCallback) {
     })
     .catch(error => {
       console.error('[request]', error);
-      messageCallback('Something went wrong.');
+      if (messageCallback) {
+        messageCallback('Something went wrong.');
+      }
   });
 }
 

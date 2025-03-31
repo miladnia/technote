@@ -1,2 +1,2 @@
-export { default as OpenFolderModal } from "./OpenFolderModal.jsx";
-// export { default as FolderMenu } from "./FolderMenu.jsx";
+export { default as NotesNav } from "./NotesNav.jsx";
+export { default as OpenDirectoryButton } from "./OpenDirectoryButton.jsx";

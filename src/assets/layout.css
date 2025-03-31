@@ -68,25 +68,25 @@ nav ul {
     list-style: none;
 }
 
-aside .entries li > a,
-aside .entries li > button {
+nav.entries > ul li > a,
+nav.entries > ul li > button {
     display: block;
     padding: 0.5rem 1rem;
     border-radius: 0.75rem;
     transition: color .15s ease-in-out, background-color .15s ease-in-out;
 }
 
-aside .entries li > a,
-aside .entries li > a:hover,
-aside .entries li > a:visited,
-aside .entries li > button,
-aside .entries li > button:hover {
+nav.entries > ul li > a,
+nav.entries > ul li > a:hover,
+nav.entries > ul li > a:visited,
+nav.entries > ul li > button,
+nav.entries > ul li > button:hover {
     color: #ececec !important;
     text-decoration: none;
 }
 
-aside .entries li > a:hover,
-aside .entries li > button:hover {
+nav.entries > ul li > a:hover,
+nav.entries > ul li > button:hover {
     background-color: var(--gray-750);
 }
 

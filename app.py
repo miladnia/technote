@@ -110,6 +110,13 @@ def open():
     )
 
 
+@app.route("/close", methods=["POST"])
+def close():
+    directory_id = request.json.get("directory_id")
+    technote.hide_directory(directory_id)
+    return api_response({})
+
+
 @app.route("/explore/", defaults={'directory': ''})
 @app.route("/explore/<path:directory>")
 def explore(directory: str):
