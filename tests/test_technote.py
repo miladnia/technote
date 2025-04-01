@@ -3,7 +3,7 @@ import sys
 import pytest
 from pathlib import Path
 
-basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../app"))
 sys.path.append(basedir)
 
 from technote import list_filesystem
@@ -36,9 +36,10 @@ def test_list_filesystem_valid(setup_test_environment):
     result = list_filesystem("test_directory")
 
     assert len(result) >= 2  # Must include "." and ".."
-    assert result[0]["name"] == "."
-    assert result[1]["name"] == ".."
-    assert any(entry["name"] == "subdir" for entry in result)
+    assert result["current_directory"]["name"] == "."
+    assert result["parent_directory"]["name"] == ".."
+    assert any(entry["name"] == "subdir" for entry in result["directories"])
+
 
 def test_list_filesystem_not_found(setup_test_environment):
     """Tests handling of a non-existent directory."""
@@ -60,8 +61,8 @@ def test_list_filesystem_parent_directory(setup_test_environment):
     home, test_dir, _, _ = setup_test_environment
     result = list_filesystem("test_directory")
 
-    assert result[1]["name"] == ".."
-    assert result[1]["real_path"] == str(home if test_dir == home else test_dir.parent)
+    assert result["parent_directory"]["name"] == ".."
+    assert result["parent_directory"]["real_path"] == str(home if test_dir == home else test_dir.parent)
 
 
 def test_list_filesystem_traversal_handling(setup_test_environment):
@@ -69,7 +70,7 @@ def test_list_filesystem_traversal_handling(setup_test_environment):
     home, test_dir, test_subdir, _ = setup_test_environment
     result = list_filesystem("test_directory/../test_directory")
 
-    assert any(entry["name"] == "subdir" for entry in result)
+    assert any(entry["name"] == "subdir" for entry in result["directories"])
 
 
 def test_list_filesystem_markdown_files(setup_test_environment):
@@ -77,6 +78,6 @@ def test_list_filesystem_markdown_files(setup_test_environment):
     _, test_dir, _, test_md_file = setup_test_environment
     result = list_filesystem("test_directory")
 
-    md_files = [entry for entry in result if entry["type"] == "file"]
+    md_files = [entry for entry in result["files"] if entry["type"] == "file"]
     assert len(md_files) == 1
     assert md_files[0]["name"] == "file.md"
