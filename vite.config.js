@@ -7,10 +7,10 @@ export default defineConfig({
   base: './',
   build: {
     manifest: true,
-    outDir: 'static/dist',
+    outDir: 'app/static/dist',
     rollupOptions: {
       // overwrite default .html entry
-      input: 'src/main.jsx',
+      input: 'src/web-client/main.jsx',
     },
     copyPublicDir: false,
   },

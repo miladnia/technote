@@ -1,4 +1,4 @@
-.PHONY: install fresh db build clean run dev
+.PHONY: install fresh db build clean test run dev
 
 install:
 	python3 -m venv .venv
@@ -22,9 +22,12 @@ clean:
 	fi; \
 	rm -rf instance/
 
+test:
+	.venv/bin/pytest -v ./tests
+
 run:
-	.venv/bin/python app.py
+	.venv/bin/python ./app/app.py
 
 dev:
 	npm run dev &
-	.venv/bin/flask run --debug
+	.venv/bin/flask --app 'app/app.py' run --debug

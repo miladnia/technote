@@ -3,7 +3,7 @@ import sys
 import sqlite3
 from pathlib import Path
 
-basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../app"))
 sys.path.append(basedir)
 
 from config import DATABASE_FILE, DATABASE_SCHEMA

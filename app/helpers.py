@@ -3,7 +3,7 @@ import json
 import sqlite3
 
 from flask import g, jsonify, render_template, Response, url_for
-from config import DATABASE_FILE, VITE_MANIFEST
+from config import DATABASE_FILE, VITE_MANIFEST_FILE, DEV_VITE_MAIN_FILE
 
 
 def get_db():
@@ -57,7 +57,7 @@ def render_alert(message: str, code: int) -> str:
 
 def render_vite_assets(dev_mode: bool) -> str:
     if dev_mode:
-        return """
+        vite_scripts = """
             <script type="module">
                 import RefreshRuntime from 'http://localhost:5173/@react-refresh'
                 RefreshRuntime.injectIntoGlobalHook(window)
@@ -66,11 +66,14 @@ def render_vite_assets(dev_mode: bool) -> str:
                 window.__vite_plugin_react_preamble_installed__ = true
             </script>
             <script type="module" src="http://localhost:5173/@vite/client"></script>
-            <script type="module" src="http://localhost:5173/src/main.jsx"></script>
+        """
+        return f"""
+            {vite_scripts}
+            <script type="module" src="http://localhost:5173/{DEV_VITE_MAIN_FILE}"></script>
         """
     else:
         assets = []
-        with open(VITE_MANIFEST) as f:
+        with open(VITE_MANIFEST_FILE) as f:
             manifest = json.load(f)
         for v in manifest.values():
             if v.get("isEntry", False):
