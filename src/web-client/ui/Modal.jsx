@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import clsx from "clsx";
 
@@ -11,6 +12,19 @@ function Modal({
   noPaddings = false,
   children,
 }) {
+  const [hasBeenOpened, setHasBeenOpened] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      // This is the first time the modal is opened
+      setHasBeenOpened(true);
+    }
+  }, [open]);
+
+  if (!hasBeenOpened) {
+    return null;
+  }
+
   return createPortal(
     <div
       className="modal"
