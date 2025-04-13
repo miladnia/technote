@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".", // Base directory for resolving paths
+      "paths": {
+        "@modules": ["src/web-client/modules"],
+        "@ui": ["src/web-client/ui"],
+        "@utils": ["src/web-client/utils"]
+      }
+    },
+    "include": ["src"]
+}
