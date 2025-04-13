@@ -57,19 +57,16 @@ def render_alert(message: str, code: int) -> str:
 
 def render_vite_assets(dev_mode: bool) -> str:
     if dev_mode:
-        vite_scripts = """
+        return f"""
             <script type="module">
                 import RefreshRuntime from 'http://localhost:5173/@react-refresh'
                 RefreshRuntime.injectIntoGlobalHook(window)
-                window.$RefreshReg$ = () => {}
+                window.$RefreshReg$ = () => {{}}
                 window.$RefreshSig$ = () => (type) => type
                 window.__vite_plugin_react_preamble_installed__ = true
             </script>
             <script type="module" src="http://localhost:5173/@vite/client"></script>
-        """
-        return f"""
-            {vite_scripts}
-            <script type="module" src="http://localhost:5173/{DEV_VITE_MAIN_FILE}"></script>
+            <script type="module" src="http://localhost:5173{DEV_VITE_MAIN_FILE}"></script>
         """
     else:
         assets = []
