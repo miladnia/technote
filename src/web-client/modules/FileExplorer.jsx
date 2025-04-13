@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { request } from '../utils';
+import { useEffect, useState } from "react";
+import { request } from "@utils";
 
 function FileExplorer({ apiUrl, onDirectoryChange }) {
   const [entries, setEntries] = useState(null);
 
-  const loadEntries = (path = '') => {
+  const loadEntries = (path = "") => {
     request([apiUrl, path], (entries) => {
       setEntries(entries);
       onDirectoryChange(entries.current_directory?.real_path);
@@ -23,21 +23,29 @@ function FileExplorer({ apiUrl, onDirectoryChange }) {
     <table className="table table-hover table-sm align-middle x-transparent-table">
       <thead>
         <tr>
-          <th className="w-50" scope="col">Directory</th>
-          <th className="w-50" scope="col">Path</th>
+          <th className="w-50" scope="col">
+            Directory
+          </th>
+          <th className="w-50" scope="col">
+            Path
+          </th>
         </tr>
       </thead>
       <tbody>
         {entries && (
           <>
-            <ParentEntry entry={entries.parent_directory} onClick={handleEntryClick} />
-            {entries.directories?.map(entry => (
+            <ParentEntry
+              entry={entries.parent_directory}
+              onClick={handleEntryClick}
+            />
+            {entries.directories?.map((entry) => (
               <DirectoryEntry
                 key={entry.real_path}
                 entry={entry}
-                onClick={handleEntryClick} />
+                onClick={handleEntryClick}
+              />
             ))}
-            {entries.files?.map(entry => (
+            {entries.files?.map((entry) => (
               <FileEntry key={entry.real_path} entry={entry} />
             ))}
           </>
@@ -54,12 +62,15 @@ function DirectoryEntry({ entry, onClick }) {
         <button
           className="btn btn-link text-light text-decoration-none p-0"
           type="button"
-          onClick={() => onClick(entry)}>
-            <i className="bi bi-folder2 me-2"></i>
-            {entry.name}
+          onClick={() => onClick(entry)}
+        >
+          <i className="bi bi-folder2 me-2"></i>
+          {entry.name}
         </button>
       </th>
-      <td><small className="text-secondary">{entry.real_path}</small></td>
+      <td>
+        <small className="text-secondary">{entry.real_path}</small>
+      </td>
     </tr>
   );
 }
@@ -68,8 +79,8 @@ function FileEntry({ entry }) {
   return (
     <tr>
       <td colSpan="2">
-          <i className="bi bi-filetype-md me-2"></i>
-          <span className="opacity-50">{entry.name}</span>
+        <i className="bi bi-filetype-md me-2"></i>
+        <span className="opacity-50">{entry.name}</span>
       </td>
     </tr>
   );
@@ -82,9 +93,10 @@ function ParentEntry({ entry, onClick }) {
         <button
           className="btn btn-link text-light text-decoration-none px-0 py-1 w-100 text-start"
           type="button"
-          onClick={() => onClick(entry)}>
-            <i className="bi bi-arrow-90deg-up me-2"></i>
-            Back
+          onClick={() => onClick(entry)}
+        >
+          <i className="bi bi-arrow-90deg-up me-2"></i>
+          Back
         </button>
       </td>
     </tr>

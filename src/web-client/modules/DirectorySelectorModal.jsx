@@ -1,17 +1,17 @@
 import { useRef, useState } from "react";
 import { FileExplorer } from ".";
-import { Modal } from "../ui";
+import { Modal } from "@ui";
 
 function DirectorySelectorModal({ open, onClose, onDirectorySelect }) {
   const [navigatedDirectory, setNavigatedDirectory] = useState("");
-  const directoryInput = useRef(null);
+  const directoryInputRef = useRef(null);
 
   const handleDirectoryChange = (path) => {
     setNavigatedDirectory(path);
   };
 
   const handleSelectClick = () => {
-    const selectedDirectory = directoryInput.current.value;
+    const selectedDirectory = directoryInputRef.current.value;
     onDirectorySelect(selectedDirectory);
   };
 
@@ -23,7 +23,7 @@ function DirectorySelectorModal({ open, onClose, onDirectorySelect }) {
             <input
               className="form-control"
               defaultValue={navigatedDirectory}
-              ref={directoryInput}
+              ref={directoryInputRef}
             />
           </div>
           <div className="col-auto">

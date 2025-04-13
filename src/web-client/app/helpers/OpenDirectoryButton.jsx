@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { requestPOST } from "../../utils";
-import { DirectorySelectorModal } from "../../modules";
+import { requestPOST } from "@utils";
+import { DirectorySelectorModal } from "@modules";
 
 function OpenDirectoryButton({ className, onDirectoryOpen, children }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
