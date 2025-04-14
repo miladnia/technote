@@ -130,14 +130,14 @@ def find_notes_by_directory(directory_id: str, options: DataOptions = None) -> l
     return [Note.from_db_row(row, options) for row in db_rows]
 
 
-def get_note(note_id: str, with_content: bool=False, with_preview: bool=False) -> Note:
+def get_note(note_id: str, options: DataOptions = None, with_content: bool = False, with_preview: bool = False) -> Note:
     db_row = query_db(
         "SELECT * FROM notes JOIN directories ON note_directory = directory_id WHERE note_id = ?",
         (note_id,), one=True
     )
     if db_row is None:
         raise ValueError("Note not found.")
-    note = Note.from_db_row(db_row)
+    note = Note.from_db_row(db_row, options)
     if with_content:
         note.content = note.path.read_text()
     if with_preview:
@@ -160,24 +160,11 @@ def write_note_content(note_id: str, content: str):
     note.path.write_text(content)
 
 
-def create_note_file(content: str, filename: str, directory_id: str | None = None):
-    if directory_id is None:
-        # Get the first directory (FIXME select a directory to save in)
-        db_row = query_db(
-            "SELECT * FROM directories ORDER BY directory_id ASC LIMIT 1",
-            one=True
-        )
-        directory_id = db_row["directory_id"]
-    else:
-        db_row = query_db(
-            "SELECT * FROM directories WHERE directory_id = ?",
-            (directory_id,), one=True
-        )
-
-    if db_row is None:
-        raise ValueError
-
-    note_path = (Path(db_row["directory_path"]) / filename).with_suffix(".md")
+def create_new_note(content: str, filename: str, directory_id: str, options: DataOptions = None):
+    if not filename:
+        raise ValueError("Empty value for filename.")
+    directory = get_directory(directory_id)
+    note_path = (directory.path / filename).with_suffix(".md")
     # Create a new file but fail if the file already exists
     with note_path.open(mode="x") as f:
         f.write(content)
@@ -188,7 +175,8 @@ def create_note_file(content: str, filename: str, directory_id: str | None = Non
             "INSERT INTO notes(note_id, note_pretty_name, note_filename, note_directory) VALUES (?, ?, ?, ?)",
             (note_id, prettify(note_path.stem), note_path.name, directory_id,)
         )
-    return note_id
+    note = get_note(note_id, options=options)
+    return note
 
 
 def search(query: str):

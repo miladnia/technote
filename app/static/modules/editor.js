@@ -1,10 +1,8 @@
 import * as utils from './utils.js';
 
 function init() {
-    ['noteCreatorBtn', 'noteEditorBtn'].forEach(btnId => {
-        const btn = document.getElementById(btnId);
-        btn?.addEventListener('click', showEditor);
-    });
+    const btn = document.getElementById('noteEditorBtn');
+    btn?.addEventListener('click', showEditor);
 }
 
 function showEditor(event) {
@@ -43,37 +41,18 @@ function getOrCreateEditor(editorSpec) {
         closeEditor(editor);
     });
 
-    // Check if there is any source note to edit
-    if (editorSpec.sourceNote) {
-        utils.disableFormElements(form);
-        utils.fetchText(editorSpec.sourceNote)
-            .then(sourceContent => {
-                form.note_content.value = sourceContent;
-                form.action = editorSpec.sourceNote;
-                utils.disableFormElements(form, false);
-            })
-            .catch(error => {
-                console.error(
-                    `Could not read the source note from "${editorSpec.sourceNote}".`
-                );
-            });
-    } else {
-        // Open a modal and get some information to create a new note
-        form.addEventListener('submit', event => {
-            event.preventDefault();
-            const modalElement = document.getElementById('noteCreatorModal');
-            // Copy note content from editor's form to modal's form
-            const modalForm = modalElement.querySelector('form');
-            modalForm.note_content.value = form.note_content.value;
-            // Show the modal
-            const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
-            modal.show();
-            // Focus the first element of the modal form
-            modalElement.addEventListener('shown.bs.modal', () => {
-                modalForm.elements?.[0].focus();
-            });
+    utils.disableFormElements(form);
+    utils.fetchText(editorSpec.sourceNote)
+        .then(sourceContent => {
+            form.note_content.value = sourceContent;
+            form.action = editorSpec.sourceNote;
+            utils.disableFormElements(form, false);
+        })
+        .catch(error => {
+            console.error(
+                `Could not read the source note from "${editorSpec.sourceNote}".`
+            );
         });
-    }
 
     return editor;
 }

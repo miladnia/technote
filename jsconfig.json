@@ -2,6 +2,7 @@
     "compilerOptions": {
       "baseUrl": ".", // Base directory for resolving paths
       "paths": {
+        "@helpers": ["src/web-client/app/helpers"],
         "@modules": ["src/web-client/modules"],
         "@ui": ["src/web-client/ui"],
         "@utils": ["src/web-client/utils"]

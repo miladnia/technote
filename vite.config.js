@@ -22,6 +22,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      "@helpers": path.resolve(__dirname, "./src/web-client/app/helpers"),
       "@modules": path.resolve(__dirname, "./src/web-client/modules"),
       "@ui": path.resolve(__dirname, "./src/web-client/ui"),
       "@utils": path.resolve(__dirname, "./src/web-client/utils"),

@@ -55,21 +55,26 @@ def plain_note(note_id):
 
     try:
         note = technote.get_note(note_id, with_content=True)
+        return note.content
     except ValueError:
         return render_notfound()
 
-    return note.content
 
-
-@app.route("/new_note", methods=["POST"])
-def new_note():
-    content = request.form.get("note_content")
-    filename = request.form.get("note_filename")
-    # Validate inputs
-    if not content or not filename:
-        return render_badrequest()
-    note_id = technote.create_note_file(content, filename)
-    return redirect(url_for("note", note_id=note_id))
+@app.route("/api/notes", methods=["POST"])
+def api_notes():
+    content = request.json.get("note_content", "")
+    filename = request.json.get("note_filename", "")
+    directory_id = request.json.get("note_directory_id", None)
+    try:
+        note = technote.create_new_note(
+            content=content,
+            filename=filename,
+            directory_id=directory_id,
+            options=noteOptions,
+        )
+        return api_response({ "note": note })
+    except ValueError as e:
+        return api_response(message=str(e))
 
 
 @app.route("/list")

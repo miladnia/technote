@@ -1,6 +1,6 @@
 import { useState } from "react";
 import clsx from "clsx";
-import { NotesNav } from "./helpers";
+import { NoteNavigator } from "@helpers";
 import "./Sidebar.css";
 
 function Sidebar() {
@@ -37,7 +37,7 @@ function Sidebar() {
           </div>
         </nav>
         <nav className="col py-2 overflow-auto entries" aria-label="Notes">
-          <NotesNav />
+          <NoteNavigator />
         </nav>
       </div>
     </aside>

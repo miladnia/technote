@@ -20,7 +20,8 @@ class Directory:
         return Directory(
             id=db_row["directory_id"],
             name=db_row["directory_name"],
-            path=db_row["directory_path"],
+            path=db_row["directory_path"]
+                if options and options.plain_object else Path(db_row["directory_path"]),
             url=options.url_handler(db_row["directory_id"])
                 if options and options.url_handler else "",
         )
