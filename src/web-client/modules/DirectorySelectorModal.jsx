@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { FileExplorer } from ".";
 import { Modal } from "@ui";
 
-function DirectorySelectorModal({ open, onClose, onDirectorySelect }) {
+function DirectorySelectorModal({ open, explorerApiUrl, onDirectorySelect, onClose }) {
   const [navigatedDirectory, setNavigatedDirectory] = useState("");
   const directoryInputRef = useRef(null);
 
@@ -34,7 +34,7 @@ function DirectorySelectorModal({ open, onClose, onDirectorySelect }) {
         </section>
         <section className="row px-3">
           <FileExplorer
-            apiUrl="/explore"
+            apiUrl={explorerApiUrl}
             onDirectoryChange={handleDirectoryChange}
           />
         </section>

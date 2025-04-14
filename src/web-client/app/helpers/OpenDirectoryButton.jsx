@@ -36,8 +36,9 @@ function OpenDirectoryButton({ className, onDirectoryOpen, children }) {
       </button>
       <DirectorySelectorModal
         open={isModalOpen}
-        onClose={handleModalClose}
+        explorerApiUrl="/explore"
         onDirectorySelect={handleDirectorySelect}
+        onClose={handleModalClose}
       />
     </>
   );
