@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, redirect, render_template, request, url_for
 
-from helpers import api_response, release_resources, render_notfound, render_badrequest, render_vite_assets
-import technote
-from models import DataOptions
+from .helpers import api_response, release_resources, render_notfound, render_badrequest, render_vite_assets
+from . import services
+from .models import DataOptions
 
 app = Flask(__name__)
 
@@ -14,6 +14,7 @@ directoryOptions = DataOptions(
     plain_object=True,
     url_handler=lambda directory_id: url_for("list_directory", directory_id=directory_id),
 )
+
 
 @app.context_processor
 def inject_helpers():
@@ -35,7 +36,7 @@ def index():
 @app.route("/notes/<note_id>")
 def note(note_id):
     try:
-        note = technote.get_note(note_id, with_preview=True)
+        note = services.get_note(note_id, with_preview=True)
     except ValueError:
         return render_notfound()
 
@@ -50,11 +51,11 @@ def plain_note(note_id):
         if not content:
             return render_badrequest()
         # Update content of the note
-        technote.write_note_content(note_id, content)
+        services.write_note_content(note_id, content)
         return redirect(url_for("note", note_id=note_id))
 
     try:
-        note = technote.get_note(note_id, with_content=True)
+        note = services.get_note(note_id, with_content=True)
         return note.content
     except ValueError:
         return render_notfound()
@@ -66,7 +67,7 @@ def api_notes():
     filename = request.json.get("note_filename", "")
     directory_id = request.json.get("note_directory_id", None)
     try:
-        note = technote.create_new_note(
+        note = services.create_new_note(
             content=content,
             filename=filename,
             directory_id=directory_id,
@@ -80,7 +81,7 @@ def api_notes():
 @app.route("/list")
 def list_all():
     return api_response(
-        technote.list_all(
+        services.list_all(
             directoryOptions=directoryOptions,
             noteOptions=noteOptions,
         )
@@ -90,7 +91,7 @@ def list_all():
 @app.route("/list/<directory_id>")
 def list_directory(directory_id):
     return api_response(
-        technote.list_directory(directory_id, noteOptions=noteOptions)
+        services.list_directory(directory_id, noteOptions=noteOptions)
     )
 
 
@@ -99,7 +100,7 @@ def search():
     query = request.args.get("q")
     if not query:
         return render_badrequest()
-    result = technote.search(query)
+    result = services.search(query)
     return jsonify(result)
 
 
@@ -107,18 +108,18 @@ def search():
 def open():
     directory_path = request.json.get("directory", "")
     try:
-        directory_id = technote.add_directory(directory_path)
+        directory_id = services.add_directory(directory_path)
     except ValueError as e:
         return api_response(message=str(e))
     return api_response(
-        technote.list_directory(directory_id, noteOptions=noteOptions)
+        services.list_directory(directory_id, noteOptions=noteOptions)
     )
 
 
 @app.route("/close", methods=["POST"])
 def close():
     directory_id = request.json.get("directory_id")
-    technote.hide_directory(directory_id)
+    services.hide_directory(directory_id)
     return api_response({})
 
 
@@ -126,9 +127,9 @@ def close():
 @app.route("/explore/<path:directory>")
 def explore(directory: str):
     return api_response(
-        technote.list_filesystem(directory)
+        services.list_filesystem(directory)
     )
 
 
-if "__main__" == __name__:
-    app.run(host="0.0.0.0", port=8087)
+def run(host, port):
+    app.run(host=host, port=port)

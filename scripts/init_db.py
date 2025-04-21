@@ -3,10 +3,10 @@ import sys
 import sqlite3
 from pathlib import Path
 
-basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../app"))
-sys.path.append(basedir)
+PROJECT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+sys.path.append(PROJECT_DIR)
 
-from config import DATABASE_FILE, DATABASE_SCHEMA
+from technote.config import DATABASE_FILE, DATABASE_SCHEMA
 
 Path(DATABASE_FILE).parent.mkdir(parents=True, exist_ok=True)
 connection = sqlite3.connect(DATABASE_FILE)

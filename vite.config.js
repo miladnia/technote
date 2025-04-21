@@ -8,7 +8,7 @@ export default defineConfig({
   base: "./",
   build: {
     manifest: true,
-    outDir: "app/static/dist",
+    outDir: "technote/static/dist",
     rollupOptions: {
       // overwrite default .html entry
       input: "src/web-client/main.jsx",

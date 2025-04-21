@@ -3,7 +3,7 @@ import json
 import sqlite3
 
 from flask import g, jsonify, render_template, Response, url_for
-from config import DATABASE_FILE, VITE_MANIFEST_FILE, DEV_VITE_MAIN_FILE
+from .config import DATABASE_FILE, VITE_MANIFEST_FILE, DEV_VITE_MAIN_FILE
 
 
 def get_db():

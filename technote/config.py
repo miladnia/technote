@@ -3,6 +3,8 @@ from pathlib import Path
 APP_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 
+SERVER_DEFAULT_HOST = "0.0.0.0"
+SERVER_DEFAULT_PORT = 8087
 CACHE_ENABLED = True
 CACHE_DIR = APP_DIR / "instance/cache"
 DATABASE_FILE = APP_DIR / "instance/notes.db"

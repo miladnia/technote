@@ -1,5 +1,9 @@
-# Flask
+# TechNote
 instance/
+
+# Python setuptools
+build/
+*.egg-info/
 
 # Python
 __pycache__/

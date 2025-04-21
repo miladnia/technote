@@ -3,10 +3,10 @@ import sys
 import pytest
 from pathlib import Path
 
-basedir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../app"))
-sys.path.append(basedir)
+PROJECT_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+sys.path.append(PROJECT_DIR)
 
-from technote import list_filesystem
+from technote.services import list_filesystem
 
 
 @pytest.fixture
