@@ -10,35 +10,35 @@ help: ## Print info about all commands
 
 .PHONY: dev
 dev: ## Run the development servers
-	$(MAKE) backend_env
+	$(MAKE) backend_requirements
 	$(MAKE) db
-	$(MAKE) frontend_env
+	$(MAKE) frontend_requirements
 	npm run dev &
 	.venv/bin/flask --app 'technote/server.py' run --debug
 
 .PHONY: test
 test: ## Run all tests
-	$(MAKE) backend_env
+	$(MAKE) backend_requirements
 	.venv/bin/pytest -v
 
 .PHONY: db
 db: ## Ensure the database is ready
 	@if [ ! -d "technote/instance/*.db" ]; then \
-		$(MAKE) backend_env; \
+		$(MAKE) backend_requirements; \
 		.venv/bin/python scripts/init_db.py; \
 	fi
 
-.PHONY: db
+.PHONY: fresh_instance
 fresh_instance: ## Remove the "instance/" directory, create a new database
 	@rm -rf technote/instance/
 	@echo "🧹 The instance cleaned up!"
-	$(MAKE) backend_env
+	$(MAKE) backend_requirements
 	@.venv/bin/python scripts/init_db.py
 	@echo "🗄️ A new database created!"
 
 .PHONY: run
 run: ## Run without installation
-	$(MAKE) backend_env
+	$(MAKE) backend_requirements
 	$(MAKE) db
 	$(MAKE) build_web
 	.venv/bin/python -m technote
@@ -53,9 +53,9 @@ install: ## Install as a package
 
 .PHONY: package
 package: ## Create package
-	$(MAKE) backend_env
 	$(MAKE) fresh_instance
 	$(MAKE) build_web
+	@rm -rf build/ *.egg-info/ dist/
 	.venv/bin/python -m build
 	@echo "📦 Successfully built the package!"
 
@@ -66,30 +66,41 @@ install_package: ## Install and run the created package to test it
 
 .PHONY: upload
 upload: ## Upload the created package to PyPI
-	$(MAKE) backend_env
+	$(MAKE) backend_requirements
 	@.venv/bin/twine upload dist/*
 	@echo "🚀 Successfully uploaded!"
 
+.PHONY: upload_test
+upload_test: ## Upload the created package to test.pypi.org
+	$(MAKE) backend_requirements
+	@.venv/bin/twine upload --repository testpypi dist/*
+	@echo "🚀 Successfully uploaded!"
+
+.PHONY: install_test
+install_test: ## Install the package from test.pypi.org
+	@pipx install --index-url https://test.pypi.org/simple pytechnote
+
 .PHONY: build_web
 build_web: ## Build the web client
-	$(MAKE) frontend_env
+	$(MAKE) frontend_requirements
+	@rm -rf technote/static/dist/
 	npm run build
 
-.PHONY: backend_env
-backend_env: ## Install Python packages
+.PHONY: backend_requirements
+backend_requirements: ## Ensure the required Python packages have installed
 	@if [ ! -d ".venv" ]; then \
 		python3 -m venv .venv; \
 		.venv/bin/pip install -r requirements.txt; \
 	fi
 
-.PHONY: frontend_env
-frontend_env: ## Install node modules
+.PHONY: frontend_requirements
+frontend_requirements: ## Ensure the required node modules have installed
 	@if [ ! -d "node_modules" ]; then \
 		npm install; \
 	fi
 
 .PHONY: clean
-clean: ## Remove build files, database
+clean: ## Remove build files, cache files, packages, and the database
 	@ read -p "Confirm clean? (y/N) " ans; \
 	if [ "$$ans" != "y" ]; then \
 		echo "Operation aborted."; \
@@ -100,16 +111,10 @@ clean: ## Remove build files, database
 		technote/static/dist/ \
 		build/ \
 		*.egg-info/ \
-		dist/
-	@echo "🧹 Cleaned up!"
-
-.PHONY: deep_clean
-deep_clean: ## Remove packages, cache files
-	@ $(MAKE) clean && \
-	rm -rf \
+		dist/ \
 		.venv/ \
 		node_modules/ \
 		technote/__pycache__/ \
 		tests/__pycache__/ \
 		.pytest_cache/
-	@echo "🧹 The environment is clean."
+	@echo "🧹 Cleaned up!"
