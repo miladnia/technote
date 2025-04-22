@@ -116,6 +116,17 @@ def open():
     )
 
 
+@app.route("/open_example_notes", methods=["POST"])
+def open_example_notes():
+    try:
+        directory_id = services.add_example_notes_directory()
+    except ValueError as e:
+        return api_response(message=str(e))
+    return api_response(
+        services.list_directory(directory_id, noteOptions=noteOptions)
+    )
+
+
 @app.route("/close", methods=["POST"])
 def close():
     directory_id = request.json.get("directory_id")

@@ -94,14 +94,6 @@ nav ul .list-title {
     color: var(--gray-500);
 }
 
-/* brand */
-
-.brand {
-    /* color: #d63384; */
-    font-weight: bolder;
-    font-size: 1.1em;
-}
-
 /* toc */
 
 .toc-container ol,

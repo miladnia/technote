@@ -6,7 +6,7 @@ function DirectoryList({ directories, onDirectoryClick, onDirectoryOpen }) {
     <>
       <div className="d-flex align-items-center list-title">
         <i className="bi bi-folder"></i>
-        <div className="flex-grow-1 ms-2">
+        <div className="flex-grow-1 ms-2 opacity-75">
           <strong>Directories</strong>
         </div>
         <DropDownMenu>

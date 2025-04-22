@@ -19,8 +19,8 @@ function NoteNavigator() {
     });
   };
 
-  const handleDirectoryOpen = (notes) => {
-    setEntries(notes);
+  const handleDirectoryOpen = (entries) => {
+    setEntries(entries);
     setIsHome(false);
   };
 

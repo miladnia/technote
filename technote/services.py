@@ -6,7 +6,7 @@ from flask import url_for
 from markupsafe import Markup
 import pypandoc as pandoc
 
-from .config import CACHE_ENABLED, CACHE_DIR, PANDOC_TEMPLATE
+from .config import CACHE_ENABLED, CACHE_DIR, EXAMPLE_NOTES_DIR, PANDOC_TEMPLATE
 from .helpers import dbhash, get_db, prettify, query_db
 from .models import DataOptions, Directory, Note
 
@@ -105,6 +105,10 @@ def add_directory(directory_path: str) -> int:
             ) for f in md_files
         ])
     return directory_id
+
+
+def add_example_notes_directory() -> int:
+    return add_directory(EXAMPLE_NOTES_DIR)
 
 
 def hide_directory(directory_id):

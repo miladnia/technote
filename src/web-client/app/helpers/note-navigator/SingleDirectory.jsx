@@ -39,13 +39,13 @@ function SingleDirectory({
     <>
       <div className="d-flex align-items-center list-title">
         {hasBackToHome ? (
-          <button className="btn" onClick={onBackToHomeClick}>
-            <i className="bi bi-arrow-left"></i>
+          <button className="btn p-0 pe-1" onClick={onBackToHomeClick}>
+            <i className="bi bi-arrow-left fs-5"></i>
           </button>
         ) : (
           <i className="bi bi-folder"></i>
         )}
-        <div className="flex-grow-1 ms-2">
+        <div className="flex-grow-1 ms-2 opacity-75">
           <strong>{directory.name}</strong>
         </div>
         <DirectoryOptions

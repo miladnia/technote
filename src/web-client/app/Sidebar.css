@@ -48,3 +48,18 @@
         visibility: hidden;
     }
 }
+
+/* brand */
+
+.sidebar .brand {
+    /* color: #d63384; */
+    font-weight: bolder;
+    font-size: 1.1em;
+    opacity: 0.75;
+}
+
+/* icons */
+
+.sidebar i {
+    opacity: 0.75;
+}
