@@ -121,7 +121,7 @@ def find_all() -> list[Note]:
     db_rows = query_db(
         "SELECT * FROM notes JOIN directories ON note_directory = directory_id ORDER BY note_directory, note_pretty_name"
     )
-    return [Note.from_db_row(row) for row in db_rows]
+    return [Note.from_model(row) for row in db_rows]
 
 
 def find_notes_by_directory(directory_id: str) -> list[Note]:
