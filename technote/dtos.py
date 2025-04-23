@@ -9,6 +9,8 @@ class NoteDTO:
     name: str
     location_on_disk: str | None = None
     url: str | None = None
+    html_content_url: str | None = None
+    plain_content_url: str | None = None
 
 
     @staticmethod
@@ -17,7 +19,9 @@ class NoteDTO:
             id=note.id,
             name=note.name,
             location_on_disk=str(note.path.resolve()),
-            url=url_for("note", note_id=note.id)
+            url=url_for("note", note_id=note.id),
+            html_content_url=url_for("html_note", note_id=note.id),
+            plain_content_url=url_for("plain_note", note_id=note.id),
         )
 
 

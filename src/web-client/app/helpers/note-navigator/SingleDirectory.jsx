@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { requestPOST } from "@utils";
+import { request, requestPOST } from "@utils";
 import { EmptyEditor as Editor } from "@helpers";
 import NoteList from "./NoteList.jsx";
 import DirectoryOptions from "./DirectoryOptions";
@@ -34,6 +34,10 @@ function SingleDirectory({
     );
   };
 
+  const handleNoteClick = (note) => {
+    asyncShowNote(note);
+  };
+
   return (
     <>
       <div className="d-flex align-items-center list-title">
@@ -58,9 +62,29 @@ function SingleDirectory({
         onSave={handleNoteSave}
         onClose={() => setIsEditorOpen(false)}
       />
-      <NoteList notes={directory.notes} />
+      <NoteList notes={directory.notes} onNoteClick={handleNoteClick} />
     </>
   );
+}
+
+// Temporary solution before switching to Next
+function asyncShowNote(note) {
+  request(note.html_content_url, (content) => {
+    document.title = note.name;
+    window.history.pushState(null, note.name, note.url);
+    const noteContentElement = document.getElementById("noteContent");
+    if (noteContentElement) {
+      noteContentElement.innerHTML = content;
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+      }, 500);
+    }
+    const noteEditorBtn = document.getElementById("noteEditorBtn");
+    if (noteEditorBtn) {
+      noteEditorBtn.setAttribute("data-source-note", note.plain_content_url);
+      noteEditorBtn.setAttribute("data-editor-id", `noteEditor_${note.id}`);
+    } 
+  });
 }
 
 export default SingleDirectory;

@@ -7,14 +7,14 @@
       <button class="btn x-action-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocPanel" aria-controls="tocPanel" title="Table of contents">
          <i class="bi bi-list-nested fs-5"></i>
       </button>
-      <button id="noteEditorBtn" class="btn x-action-btn" type="button" data-editor-id="noteEditor" data-source-note="{{ url_for('plain_note', note_id=note.id) }}" title="Edit note">
+      <button id="noteEditorBtn" class="btn x-action-btn" type="button" data-editor-id="noteEditor_{{ note.id }}" data-source-note="{{ url_for('plain_note', note_id=note.id) }}" title="Edit note">
          <i class="bi bi-pencil-square fs-5"></i>
       </button>
       <a class="btn x-action-btn" href="#top" title="Back to top">
          <i class="bi bi-arrow-up-square fs-5"></i>
       </a>
    </nav>
-   <div class="limited-container">
+   <div class="limited-container" id="noteContent">
       {{ note.preview }}
    </div>
 {% endblock %}

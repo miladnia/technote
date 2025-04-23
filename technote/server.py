@@ -33,6 +33,15 @@ def note(note_id):
     return render_template("note.html", note=note)
 
 
+@app.route("/api/html_notes/<note_id>", methods=["GET"])
+def html_note(note_id):
+    try:
+        note = services.get_note(note_id, with_preview=True)
+    except ValueError:
+        return "NOT FOUND"
+    return api_response(note.preview)
+
+
 @app.route("/plain_notes/<note_id>", methods=["GET", "POST"])
 def plain_note(note_id):
     if "POST" == request.method:
