@@ -74,11 +74,11 @@ def render_vite_assets(dev_mode: bool) -> str:
             manifest = json.load(f)
         for v in manifest.values():
             if v.get("isEntry", False):
-                asset_url = url_for("static", filename=f"dist/{v.get("file")}")
-                assets.append(f'<script type="module" src="{asset_url}"></script>')
                 for css in v.get("css", []):
                     asset_url = url_for("static", filename=f"dist/{css}")
-                    assets.append(f'<link href="{asset_url}" rel="stylesheet">')
+                    assets.append(f'<link rel="stylesheet" href="{asset_url}">')
+                asset_url = url_for("static", filename=f"dist/{v.get("file")}")
+                assets.append(f'<script type="module" src="{asset_url}" defer></script>')
         return "\n".join(assets)
 
 

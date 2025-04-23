@@ -12,6 +12,14 @@ export default defineConfig({
     rollupOptions: {
       // overwrite default .html entry
       input: "src/web-client/main.jsx",
+      output: {
+        // Keep CSS imports in separate chunks
+        manualChunks(id) {
+          if (id.includes('bootstrap-icons.css')) {
+            return 'bootstrap-icons';
+          }
+        }
+      },
     },
     copyPublicDir: false,
   },

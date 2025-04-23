@@ -125,7 +125,3 @@ def explore(directory: str):
     return api_response(
         services.list_filesystem(directory)
     )
-
-
-def run(host, port):
-    app.run(host=host, port=port)

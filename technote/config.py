@@ -3,6 +3,7 @@ from pathlib import Path
 APP_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 
+MODULE_PATH = "technote.server:app"
 SERVER_DEFAULT_HOST = "0.0.0.0"
 SERVER_DEFAULT_PORT = 8087
 CACHE_ENABLED = True

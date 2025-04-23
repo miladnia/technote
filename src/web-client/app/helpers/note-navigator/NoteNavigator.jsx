@@ -15,7 +15,7 @@ function NoteNavigator() {
     const apiUrl = "/list";
     request(url || apiUrl, (entries) => {
       setEntries(entries);
-      setIsHome(null === url);
+      setIsHome(apiUrl === url);
     });
   };
 
@@ -41,6 +41,8 @@ function NoteNavigator() {
   };
 
   const handleDirectoryClick = (directory) => {
+    setEntries({ directory: directory });
+    setIsHome(false);
     loadEntries(directory.url);
   };
 
