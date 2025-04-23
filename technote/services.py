@@ -8,46 +8,44 @@ import pypandoc as pandoc
 
 from .config import CACHE_ENABLED, CACHE_DIR, EXAMPLE_NOTES_DIR, PANDOC_TEMPLATE
 from .helpers import dbhash, get_db, prettify, query_db
-from .models import DataOptions, Directory, Note
+from .entities import Directory, Note
+from .dtos import DirectoryDTO, NavigatorDTO, NoteDTO
 
 
-def list_all(directoryOptions: DataOptions, noteOptions: DataOptions) -> dict:
+def list_all() -> NavigatorDTO:
     query = """
     SELECT *
       FROM directories
      WHERE is_directory_hidden = 0
      ORDER BY directory_name
     """
-    db_rows = query_db(query)
-    if not db_rows:
+    directory_rows = query_db(query)
+    if not directory_rows:
         return {}
 
-    directory_list = [Directory.from_db_row(row, directoryOptions) for row in db_rows]
-    if len(directory_list) == 1:
-        directory = directory_list[0]
-        return {
-            "directory": {
-                "name": directory.name,
-                "id": directory.id,
-                "note_list": find_notes_by_directory(directory.id, noteOptions),
-            }
-        }
+    directories = [Directory.from_model(row) for row in directory_rows]
+    if len(directories) == 1:
+        return NavigatorDTO(
+            directory=DirectoryDTO.from_domain(
+                directory=directories[0],
+                notes=find_notes_by_directory(directories[0].id)
+            )
+        )
+    return NavigatorDTO(
+        directory_list=[
+            DirectoryDTO.from_domain(directory)
+            for directory in directories
+        ]
+    )
 
-    return {
-        "directory_list": directory_list
-    }
 
-
-def list_directory(directory_id: str, noteOptions: DataOptions) -> dict:
-    note_list = find_notes_by_directory(directory_id, noteOptions)
-    directory_name = note_list[0].directory_name if note_list else get_directory(directory_id).name
-    return {
-        "directory": {
-            "name": directory_name,
-            "id": directory_id,
-            "note_list": note_list,
-        }
-    }
+def list_directory(directory_id: str) -> NavigatorDTO:
+    return NavigatorDTO(
+        directory=DirectoryDTO.from_domain(
+            directory=get_directory(directory_id),
+            notes=find_notes_by_directory(directory_id)
+        )
+    )
 
 
 def add_directory(directory_path: str) -> int:
@@ -126,22 +124,22 @@ def find_all() -> list[Note]:
     return [Note.from_db_row(row) for row in db_rows]
 
 
-def find_notes_by_directory(directory_id: str, options: DataOptions = None) -> list[Note]:
-    db_rows = query_db(
+def find_notes_by_directory(directory_id: str) -> list[Note]:
+    note_rows = query_db(
         "SELECT * FROM notes JOIN directories ON note_directory = directory_id WHERE directory_id = ? ORDER BY note_pretty_name",
         (directory_id,)
     )
-    return [Note.from_db_row(row, options) for row in db_rows]
+    return [Note.from_model(row) for row in note_rows]
 
 
-def get_note(note_id: str, options: DataOptions = None, with_content: bool = False, with_preview: bool = False) -> Note:
-    db_row = query_db(
+def get_note(note_id: str, with_content: bool = False, with_preview: bool = False) -> Note:
+    note_row = query_db(
         "SELECT * FROM notes JOIN directories ON note_directory = directory_id WHERE note_id = ?",
         (note_id,), one=True
     )
-    if db_row is None:
+    if note_row is None:
         raise ValueError("Note not found.")
-    note = Note.from_db_row(db_row, options)
+    note = Note.from_model(note_row)
     if with_content:
         note.content = note.path.read_text()
     if with_preview:
@@ -156,7 +154,7 @@ def get_directory(directory_id: str) -> Directory:
     db_row = query_db(query, (directory_id,), one=True)
     if db_row is None:
         raise ValueError("Directory not found.")
-    return Directory.from_db_row(db_row)
+    return Directory.from_model(db_row)
 
 
 def write_note_content(note_id: str, content: str):
@@ -164,7 +162,7 @@ def write_note_content(note_id: str, content: str):
     note.path.write_text(content)
 
 
-def create_new_note(content: str, filename: str, directory_id: str, options: DataOptions = None):
+def create_new_note(content: str, filename: str, directory_id: str) -> Note:
     if not filename:
         raise ValueError("Empty value for filename.")
     directory = get_directory(directory_id)
@@ -174,12 +172,13 @@ def create_new_note(content: str, filename: str, directory_id: str, options: Dat
         f.write(content)
     # Create a new record for the new note in the database
     note_id = dbhash(str(note_path.resolve()))
+    note_pretty_name = prettify(note_path.stem)
     with get_db() as db:
         db.execute(
             "INSERT INTO notes(note_id, note_pretty_name, note_filename, note_directory) VALUES (?, ?, ?, ?)",
-            (note_id, prettify(note_path.stem), note_path.name, directory_id,)
+            (note_id, note_pretty_name, note_path.name, directory_id,)
         )
-    note = get_note(note_id, options=options)
+    note = get_note(note_id)
     return note
 
 

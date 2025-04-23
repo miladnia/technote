@@ -2,18 +2,9 @@ from flask import Flask, jsonify, redirect, render_template, request, url_for
 
 from .helpers import api_response, release_resources, render_notfound, render_badrequest, render_vite_assets
 from . import services
-from .models import DataOptions
+from .dtos import NoteDTO
 
 app = Flask(__name__)
-
-noteOptions = DataOptions(
-    plain_object=True,
-    url_handler=lambda note_id: url_for("note", note_id=note_id),
-)
-directoryOptions = DataOptions(
-    plain_object=True,
-    url_handler=lambda directory_id: url_for("list_directory", directory_id=directory_id),
-)
 
 
 @app.context_processor
@@ -39,7 +30,6 @@ def note(note_id):
         note = services.get_note(note_id, with_preview=True)
     except ValueError:
         return render_notfound()
-
     return render_template("note.html", note=note)
 
 
@@ -53,7 +43,6 @@ def plain_note(note_id):
         # Update content of the note
         services.write_note_content(note_id, content)
         return redirect(url_for("note", note_id=note_id))
-
     try:
         note = services.get_note(note_id, with_content=True)
         return note.content
@@ -71,27 +60,23 @@ def api_notes():
             content=content,
             filename=filename,
             directory_id=directory_id,
-            options=noteOptions,
         )
-        return api_response({ "note": note })
     except ValueError as e:
         return api_response(message=str(e))
+    return api_response({
+        "note": NoteDTO.from_domain(note)
+    })
 
 
 @app.route("/list")
 def list_all():
-    return api_response(
-        services.list_all(
-            directoryOptions=directoryOptions,
-            noteOptions=noteOptions,
-        )
-    )
+    return api_response( services.list_all() )
 
 
 @app.route("/list/<directory_id>")
 def list_directory(directory_id):
     return api_response(
-        services.list_directory(directory_id, noteOptions=noteOptions)
+        services.list_directory(directory_id)
     )
 
 
@@ -112,7 +97,7 @@ def open():
     except ValueError as e:
         return api_response(message=str(e))
     return api_response(
-        services.list_directory(directory_id, noteOptions=noteOptions)
+        services.list_directory(directory_id)
     )
 
 
@@ -123,7 +108,7 @@ def open_example_notes():
     except ValueError as e:
         return api_response(message=str(e))
     return api_response(
-        services.list_directory(directory_id, noteOptions=noteOptions)
+        services.list_directory(directory_id)
     )
 
 

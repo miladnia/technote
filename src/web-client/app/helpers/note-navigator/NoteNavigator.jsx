@@ -61,7 +61,6 @@ function NoteNavigator() {
       {entries.directory && (
         <SingleDirectory
           directory={entries.directory}
-          notes={entries.directory.note_list}
           onDirectoryClose={() => handleDirectoryClose(entries.directory)}
           onDirectoryOpen={handleDirectoryOpen}
           hasBackToHome={!isHome}

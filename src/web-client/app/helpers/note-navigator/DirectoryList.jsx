@@ -25,7 +25,7 @@ function DirectoryList({ directories, onDirectoryClick, onDirectoryOpen }) {
           <li key={dir.id}>
             <button
               className="btn btn-link w-100 text-start"
-              title={dir.path}
+              title={dir.location_on_disk}
               onClick={() => onDirectoryClick(dir)}
             >
               {dir.name}

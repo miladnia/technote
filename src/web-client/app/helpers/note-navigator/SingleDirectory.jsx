@@ -6,7 +6,6 @@ import DirectoryOptions from "./DirectoryOptions";
 
 function SingleDirectory({
   directory,
-  notes,
   onDirectoryOpen,
   onDirectoryClose,
   hasBackToHome,
@@ -59,7 +58,7 @@ function SingleDirectory({
         onSave={handleNoteSave}
         onClose={() => setIsEditorOpen(false)}
       />
-      <NoteList notes={notes} />
+      <NoteList notes={directory.notes} />
     </>
   );
 }
