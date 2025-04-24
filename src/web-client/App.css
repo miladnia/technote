@@ -68,29 +68,7 @@ nav ul {
     list-style: none;
 }
 
-nav.entries > ul li > a,
-nav.entries > ul li > button {
-    display: block;
-    padding: 0.5rem 1rem;
-    border-radius: 0.75rem;
-    transition: color .15s ease-in-out, background-color .15s ease-in-out;
-}
-
-nav.entries > ul li > a,
-nav.entries > ul li > a:hover,
-nav.entries > ul li > a:visited,
-nav.entries > ul li > button,
-nav.entries > ul li > button:hover {
-    color: #ececec !important;
-    text-decoration: none;
-}
-
-nav.entries > ul li > a:hover,
-nav.entries > ul li > button:hover {
-    background-color: var(--gray-750);
-}
-
-nav ul .list-title {
+.list-title {
     color: var(--gray-500);
 }
 
@@ -107,6 +85,28 @@ nav ul .list-title {
 
 .toc-container nav > ul > li > a {
     font-weight: bold;
+}
+
+/* nav-item, toc item */
+
+.nav-item > *,
+.toc-container a {
+    display: block;
+    padding: 0.5rem 1rem;
+    border-radius: 0.75rem;
+    color: #ececec !important;
+    text-decoration: none;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out;
+}
+
+.nav-item > *:hover,
+.toc-container a:hover {
+    background-color: var(--gray-750);
+}
+
+.nav-item-selected > *,
+.nav-item-selected > *:hover {
+    background-color: #0277BD;
 }
 
 /* note controls */

@@ -6,16 +6,20 @@ import DirectoryList from "./DirectoryList.jsx";
 import NothingToShow from "./NothingToShow.jsx";
 
 function NoteNavigator() {
+  const defaultUrl = "/list";
   const [entries, setEntries] = useState(null);
   const [isHome, setIsHome] = useState(true);
   const isLoading = null === entries;
   const isEmpty = null !== entries && 0 === Object.keys(entries).length;
 
   const loadEntries = (url = null) => {
-    const apiUrl = "/list";
-    request(url || apiUrl, (entries) => {
+    if (!url) {
+      url = localStorage.getItem("navigatorLastUrl") || defaultUrl;
+    }
+    localStorage.setItem("navigatorLastUrl", url);
+    request(url, (entries) => {
       setEntries(entries);
-      setIsHome(apiUrl === url);
+      setIsHome(defaultUrl === url);
     });
   };
 
@@ -37,7 +41,7 @@ function NoteNavigator() {
   };
 
   const handleBackToHomeClick = () => {
-    loadEntries();
+    loadEntries(defaultUrl);
   };
 
   const handleDirectoryClick = (directory) => {

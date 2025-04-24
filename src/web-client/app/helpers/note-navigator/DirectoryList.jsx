@@ -22,7 +22,7 @@ function DirectoryList({ directories, onDirectoryClick, onDirectoryOpen }) {
       </div>
       <ul className="ps-3 py-2">
         {directories.map((dir) => (
-          <li key={dir.id}>
+          <li key={dir.id} className="nav-item">
             <button
               className="btn btn-link w-100 text-start"
               title={dir.location_on_disk}
