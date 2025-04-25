@@ -40,6 +40,7 @@ setup(
     },
     install_requires=[
         "Flask==3.0.3",
+        "gunicorn==23.0.0",
         "pypandoc-binary==1.14",
     ],
 )
