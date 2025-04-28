@@ -47,7 +47,6 @@ technote --host=0.0.0.0 --port=PORT
 > **Tip:**  
 > To prevent the browser from opening automatically, add the `--no-browser` flag.
 
----
 
 ## 🖥️ Usage Tips
 
@@ -75,7 +74,6 @@ Use the **Open Directory** button in the sidebar to open a directory containing 
 - [**React**][react] — Enhances the web interface with dynamic, interactive components.
 - [**Bootstrap**][bootstrap] — Provides a clean, responsive foundation for the UI.
 
----
 
 ## 👤 Creators
 
