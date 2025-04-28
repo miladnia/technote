@@ -9,13 +9,12 @@
 
 ## ✨ Features
 
-- 📂 **Local Files, Your Way** — Open any folder of Markdown (`.md`) notes directly, no import or sync required.
-- 🛡️ **Own Your Notes** — Files are standard Markdown, stored locally — no vendor lock-in, no surprises.
-- 🧭 **Effortless Navigation** — Browse folders, jump between notes, and navigate through headings with ease.
-- 🔍 **Fast Full-Text Search** — Quickly search across all your notes.
-- 🖥️ **Responsive Interface** — Clean, distraction-free design that works beautifully on desktop and mobile.
+- 📂 **Local Files, Your Way** — _Open any folder of Markdown (`.md`) notes directly, no import or sync required._
+- 🛡️ **Own Your Notes** — _Files are standard Markdown, stored locally — no vendor lock-in, no surprises._
+- 🧭 **Effortless Navigation** — _Browse folders, jump between notes, and navigate through headings with ease._
+- 🔍 **Fast Full-Text Search** — _Quickly search across all your notes._
+- 🖥️ **Responsive Interface** — _Clean, distraction-free design that works beautifully on desktop and mobile._
 
----
 
 ## 🚀 Get Started
 
@@ -29,7 +28,7 @@ make install
 
 > **Requirements:** Python `>= 3.10`, Node `>= 18.20`, and pipx.
 
-### Running the Server
+### Run the server
 
 Start the TechNote server:
 
@@ -44,7 +43,7 @@ Customize with:
 technote --host=0.0.0.0 --port=PORT
 ```
 
-> **Tip:**  
+> [!TIP]
 > To prevent the browser from opening automatically, add the `--no-browser` flag.
 
 
@@ -52,10 +51,9 @@ technote --host=0.0.0.0 --port=PORT
 
 Use the **Open Directory** button in the sidebar to open a directory containing your Markdown (`.md`) files. If you don't have one yet, you can create an empty directory (e.g., `~/Documents/notes/tech_notes`) and open it. Once opened, you’ll see an option next to the directory name to create new notes.
 
-> **Tip:**  
+> [!TIP]
 > No Markdown notes yet? Click **"Try with example notes"** after launching!
 
----
 
 ## 💡 How It Works
 
@@ -77,14 +75,17 @@ Use the **Open Directory** button in the sidebar to open a directory containing 
 
 ## 👤 Creators
 
-Made with ❤️ by [Milad Abdollahnia](https://github.com/miladnia)  
-Follow on [Twitter](https://twitter.com/xmiladnia)
+Milad Abdollahnia
+
+- <https://github.com/miladnia>
+- <https://twitter.com/xmiladnia>
 
 
 ## ⚖️ License
 
 TechNote is an open-source software licensed under the [MIT License][mit].  
 See the [LICENSE](./LICENSE) file for details.
+
 
 [mit]: https://opensource.org/licenses/MIT
 [flask]: https://github.com/pallets/flask
