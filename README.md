@@ -6,9 +6,6 @@
 
 ![TechNote preview](./docs/technote_note_preview.png)
 
-
-## ✨ Features
-
 - 📂 **Local Files, Your Way** — _Open any folder of Markdown (`.md`) notes directly, no import or sync required._
 - 🛡️ **Own Your Notes** — _Files are standard Markdown, stored locally — no vendor lock-in, no surprises._
 - 🧭 **Effortless Navigation** — _Browse folders, jump between notes, and navigate through headings with ease._
@@ -55,7 +52,7 @@ Use the **Open Directory** button in the sidebar to open a directory containing 
 > No Markdown notes yet? Click **"Try with example notes"** after launching!
 
 
-## 💡 How It Works
+## ✨ How It Works
 
 - **Rendering:** TechNote aims to keep everything explicit and transparent. It simply renders your existing Markdown files as HTML documents. No hidden metadata. No extra files. No surprises. You have full control over your content.
 - **Caches:** To improve performance, notes are cached as HTML and updated automatically when you edit them.
@@ -73,7 +70,7 @@ Use the **Open Directory** button in the sidebar to open a directory containing 
 - [**Bootstrap**][bootstrap] — Provides a clean, responsive foundation for the UI.
 
 
-## 👤 Creators
+## 💡 Creators
 
 Milad Abdollahnia
 
