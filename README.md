@@ -2,16 +2,17 @@
 
 **TechNote** — your Markdown notes, beautifully organized.
 
-> A self-hosted, distraction-free Markdown note-taking app with fast navigation, full-text search, and zero vendor lock-in.
+TechNote is a self-hosted, distraction-free Markdown-based note-taking app built with Flask and React. Lightweight, fast, and customizable — designed for developers who prefer to keep their notes in plain text and under their control.
 
 ![TechNote preview](./docs/technote_note_preview.png)
+
+### Features
 
 - 📂 **Local Files, Your Way** — _Open any folder of Markdown (`.md`) notes directly, no import or sync required._
 - 🛡️ **Own Your Notes** — _Files are standard Markdown, stored locally — no vendor lock-in, no surprises._
 - 🧭 **Effortless Navigation** — _Browse folders, jump between notes, and navigate through headings with ease._
 - 🔍 **Fast Full-Text Search** — _Quickly search across all your notes._
 - 🖥️ **Responsive Interface** — _Clean, distraction-free design that works beautifully on desktop and mobile._
-
 
 ## 🚀 Get Started
 
